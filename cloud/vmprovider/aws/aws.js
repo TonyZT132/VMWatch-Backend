@@ -3,8 +3,9 @@ var winston = require('winston');
 module.exports = {
     getCPUUtilizationAverage: function (accessID, accessKey, instanceID, instanceRegion, callback) {
         winston.info('Getting metrics from AWS EC2');
-        var startDate = new Date((new Date) * 1 - 1000 * 300);
-
+        // var startDate = new Date((new Date) * 1 - 1000 * 300);
+        var startDate = new Date();
+        startDate.setHours(startDate.getHours() - 1)
         var AWS = require('aws-sdk');
         AWS.config.update({
             accessKeyId: accessID,
@@ -24,7 +25,7 @@ module.exports = {
             MetricName : "CPUUtilization",
             StartTime  : startDate,
             EndTime    : new Date(),
-            Period     : 300
+            Period     : 3600
         };
 
         cloudwatch.getMetricStatistics(params, function(cloudWatchErr, response) {
