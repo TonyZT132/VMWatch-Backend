@@ -1,7 +1,7 @@
 var winston = require('winston');
 
 module.exports = {
-    getEC2Metrics: function (accessID, accessKey, instanceID, instanceRegion, callback) {
+    getCPUUtilizationAverage: function (accessID, accessKey, instanceID, instanceRegion, callback) {
         winston.info('Getting metrics from AWS EC2');
         var startDate = new Date((new Date) * 1 - 1000 * 300);
 

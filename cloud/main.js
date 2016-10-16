@@ -167,7 +167,7 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
     var region = request.params.region;
 
     winston.info("Start EC2 Watch");
-    ec2Watch.getEC2MetricsAverage(accessID,accessKey,instanceID, region, function(error, data) {
+    ec2Watch.getCPUUtilizationAverage(accessID,accessKey,instanceID, region, function(error, data) {
         if (error) {
             winston.error(error);
             response.error(error);
