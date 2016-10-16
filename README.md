@@ -1,2 +1,1 @@
 # VMWatch-Backend
-Server
