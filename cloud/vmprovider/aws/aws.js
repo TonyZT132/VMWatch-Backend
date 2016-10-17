@@ -25,7 +25,7 @@ module.exports = {
             MetricName : "CPUUtilization",
             StartTime  : startDate,
             EndTime    : new Date(),
-            Period     : 600
+            Period     : 300
         };
 
         cloudwatch.getMetricStatistics(params, function(cloudWatchErr, response) {
