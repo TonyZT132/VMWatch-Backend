@@ -5,7 +5,7 @@ module.exports = {
         winston.info('Getting metrics from AWS EC2');
         // var startDate = new Date((new Date) * 1 - 1000 * 300);
         var startDate = new Date();
-        startDate.setMinutes(startDate.getMinutes() - 10);
+        startDate.setHours(startDate.getHours() - 1)
         var AWS = require('aws-sdk');
         AWS.config.update({
             accessKeyId: accessID,
