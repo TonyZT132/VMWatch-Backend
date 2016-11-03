@@ -159,7 +159,7 @@ Parse.Cloud.define("deleteValidationRecord", function(request, response) {
     });
 });
 
-/*Validate the code*/
+/*Interface for Monitoring EC2 Data*/
 Parse.Cloud.define("ec2Watch", function(request, response) {
     var accessID = request.params.accessid;
     var accessKey = request.params.accesskey;
@@ -174,4 +174,9 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
             response.success(data);
         }
     });
+});
+
+/*Store the access data for ec2*/
+Parse.Cloud.define("ec2UserDataStore", function(request, response) {
+
 });
