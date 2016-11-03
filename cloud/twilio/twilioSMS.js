@@ -1,9 +1,8 @@
 var winston = require('winston');
-// Include the Twilio Cloud Module and initialize it
-var twilio = require("twilio")(process.env.TWILIO_ID ,process.env.TWILIO_KEY);
+var twilio = require("twilio")(process.env.TWILIO_ID, process.env.TWILIO_KEY);
 
 module.exports = {
-    sendSMS: function (phoneNumber, validationCode, callback) {
+    sendSMS: function(phoneNumber, validationCode, callback) {
         winston.info("Sending message from twilio");
         var twilioPromise = twilio.sendMessage({
             From: process.env.TWILIO_PHONE_NUM,

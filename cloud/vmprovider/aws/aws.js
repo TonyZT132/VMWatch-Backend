@@ -1,9 +1,8 @@
 var winston = require('winston');
 
 module.exports = {
-    getCPUUtilizationAverage: function (accessID, accessKey, instanceID, instanceRegion, callback) {
+    getCPUUtilizationAverage: function(accessID, accessKey, instanceID, instanceRegion, callback) {
         winston.info('Getting metrics from AWS EC2');
-        // var startDate = new Date((new Date) * 1 - 1000 * 300);
         var startDate = new Date();
         startDate.setHours(startDate.getHours() - 1)
         var AWS = require('aws-sdk');
@@ -15,17 +14,17 @@ module.exports = {
 
         var cloudwatch = new AWS.CloudWatch();
         var params = {
-            Namespace  : "AWS/EC2",
-            Dimensions : [{
-                Name:  "InstanceId",
+            Namespace: "AWS/EC2",
+            Dimensions: [{
+                Name: "InstanceId",
                 Value: instanceID
             }],
             Unit: "Percent",
-            Statistics :["Average"],
-            MetricName : "CPUUtilization",
-            StartTime  : startDate,
-            EndTime    : new Date(),
-            Period     : 600
+            Statistics: ["Average"],
+            MetricName: "CPUUtilization",
+            StartTime: startDate,
+            EndTime: new Date(),
+            Period: 600
         };
 
         cloudwatch.getMetricStatistics(params, function(cloudWatchErr, response) {
@@ -33,7 +32,7 @@ module.exports = {
             var error = null;
 
             if (cloudWatchErr) {
-                winston.error("Error: "+ err);
+                winston.error("Error: " + err);
                 callback(error, data);
             }
 

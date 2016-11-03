@@ -9,7 +9,7 @@ Parse.Cloud.define("sendCode", function(request, response) {
     winston.info("Cloud function sendCode is called");
     var area = request.params.number.substring(0, 3);
     /*If Number is outside Toronto, return error*/
-    if(area != 647 && area != 416 && area != 437){
+    if (area != 647 && area != 416 && area != 437) {
         response.error("Invalid Region Code");
     }
 
@@ -51,7 +51,7 @@ Parse.Cloud.define("sendCode", function(request, response) {
                                 validationDataObj.set("validationCode", validationCode);
                                 validationDataObj.set("requestCount", count + 1);
                                 validationDataObj.save();
-                                twilioSMS.sendSMS(request.params.number, validationCode, function(error, success)  {
+                                twilioSMS.sendSMS(request.params.number, validationCode, function(error, success) {
                                     if (error) {
                                         response.error(error);
                                     } else {
@@ -82,7 +82,7 @@ Parse.Cloud.define("sendCode", function(request, response) {
                         winston.error("Failed to query from Validation table");
                         response.error("Failed to get validation code. Reason: failed to query in database");
                     }
-                });//find record
+                }); //find record
             }
         },
         error: function(error) {
@@ -167,7 +167,7 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
     var region = request.params.region;
 
     winston.info("Start EC2 Watch");
-    ec2Watch.getCPUUtilizationAverage(accessID,accessKey,instanceID, region, function(error, data) {
+    ec2Watch.getCPUUtilizationAverage(accessID, accessKey, instanceID, region, function(error, data) {
         if (error) {
             response.error(error);
         } else {
