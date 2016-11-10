@@ -178,5 +178,5 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
 
 /*Store the access data for ec2*/
 Parse.Cloud.define("ec2UserDataStore", function(request, response) {
-    winston.console.log(request.params.accessid);
+    winston.info(request.params.accessid);
 });
