@@ -1,5 +1,7 @@
 var winston = require('winston');
 var express = require('express');
+var http = require('http');
+var crypto = require('crypto');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
 var bodyParser = require('body-parser');
@@ -38,7 +40,10 @@ app.get('/', function(req, res) {
 });
 
 var port = process.env.PORT || 1337;
-var httpServer = require('http').createServer(app);
+// var credentials = crypto.createCredentials({key: process.env.SSL_PRIVATE_KEY, cert: process.env.SSL_CERTIFICATE});
+
+var httpServer = http.createServer(app);
+// httpServer.setSecure(credentials);
 httpServer.listen(port, function() {
     winston.info('parse-server-example running on port ' + port + '.');
 });
