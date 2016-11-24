@@ -49,7 +49,7 @@ module.exports = {
                 }
             });
         } catch (err) {
-            callback(err.message, data);
+            callback(err.message, null);
         }
     }
 };
