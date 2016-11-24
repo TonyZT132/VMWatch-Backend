@@ -5,46 +5,51 @@ module.exports = {
         winston.info('Getting metrics from AWS EC2');
         var startDate = new Date();
         startDate.setHours(startDate.getHours() - 1)
-        var AWS = require('aws-sdk');
-        AWS.config.update({
-            accessKeyId: accessID,
-            secretAccessKey: accessKey,
-            region: instanceRegion
-        });
 
-        var cloudwatch = new AWS.CloudWatch();
-        var params = {
-            Namespace: "AWS/EC2",
-            Dimensions: [{
-                Name: "InstanceId",
-                Value: instanceID
-            }],
-            Unit: "Percent",
-            Statistics: ["Average"],
-            MetricName: "CPUUtilization",
-            StartTime: startDate,
-            EndTime: new Date(),
-            Period: 600
-        };
+        try {
+            var AWS = require('aws-sdk');
+            AWS.config.update({
+                accessKeyId: accessID,
+                secretAccessKey: accessKey,
+                region: instanceRegion
+            });
 
-        cloudwatch.getMetricStatistics(params, function(cloudWatchErr, response) {
-            var data = null;
-            var error = null;
+            var cloudwatch = new AWS.CloudWatch();
+            var params = {
+                Namespace: "AWS/EC2",
+                Dimensions: [{
+                    Name: "InstanceId",
+                    Value: instanceID
+                }],
+                Unit: "Percent",
+                Statistics: ["Average"],
+                MetricName: "CPUUtilization",
+                StartTime: startDate,
+                EndTime: new Date(),
+                Period: 600
+            };
 
-            if (cloudWatchErr) {
-                winston.error("Error: " + err);
-                callback(error, data);
-            }
+            cloudwatch.getMetricStatistics(params, function(cloudWatchErr, response) {
+                var data = null;
+                var error = null;
 
-            try {
-                winston.info("Sucessfully get data from CloudWatch");
-                data = response;
-            } catch (exception) {
-                error = exception;
-            } finally {
-                winston.info("Returning data");
-                callback(error, data);
-            }
-        });
+                if (cloudWatchErr) {
+                    winston.error("Error: " + err);
+                    callback(error, data);
+                }
+
+                try {
+                    winston.info("Sucessfully get data from CloudWatch");
+                    data = response;
+                } catch (exception) {
+                    error = exception;
+                } finally {
+                    winston.info("Returning data");
+                    callback(error, data);
+                }
+            });
+        } catch (err) {
+            callback(err.message, data);
+        }
     }
 };
