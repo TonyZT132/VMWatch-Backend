@@ -44,6 +44,7 @@ Parse.Cloud.define("sendCode", function(request, response) {
                             /*If user had requested the SMS more than 5 times, block the user*/
                             if (validationDataObj.get("isBlocked") == true || validationDataObj.get('requestCount') >= 5) {
                                 validationDataObj.set("isBlocked", true);
+                                validationDataObj.save();
                                 response.error("This number has been blocked by the system, please contact customer service");
                             } else {
                                 /*Update the record and send the SMS*/
