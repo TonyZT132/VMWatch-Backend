@@ -22,7 +22,7 @@ module.exports = {
                     Value: instanceID
                 }],
                 Unit: "Percent",
-                Statistics: ["Average"],
+                Statistics: ["Average", "Maximum", "Minimum"],
                 MetricName: "CPUUtilization",
                 StartTime: startDate,
                 EndTime: new Date(),
