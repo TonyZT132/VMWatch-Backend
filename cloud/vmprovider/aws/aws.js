@@ -49,6 +49,7 @@ module.exports = {
                 }
             });
         } catch (err) {
+            winston.info("Error catched from AWS SDK");
             callback(err.message, null);
         }
     }
