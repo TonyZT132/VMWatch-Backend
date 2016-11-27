@@ -4,7 +4,8 @@ module.exports = {
     getCPUUtilizationAverage: function(accessID, accessKey, instanceID, instanceRegion, callback) {
         winston.info('Getting metrics from AWS EC2');
         var startDate = new Date();
-        startDate.setHours(startDate.getHours() - 1)
+        startDate -= 60000;
+        // startDate.setHours(startDate.getHours() - 1)
 
         try {
             var AWS = require('aws-sdk');
