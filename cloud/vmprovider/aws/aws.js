@@ -3,7 +3,7 @@ var winston = require('winston');
 module.exports = {
     getCPUUtilizationAverage: function(accessID, accessKey, instanceID, instanceRegion, callback) {
         winston.info('Getting metrics from AWS EC2');
-        var startDate = getStartTime(new Date(), 15);
+        var startDate = getStartTime(new Date(), 20);
         // startDate.setHours(startDate.getHours() - 1)
 
         try {
