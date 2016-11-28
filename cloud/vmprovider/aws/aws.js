@@ -50,8 +50,7 @@ module.exports = {
             winston.info("Error catched from AWS SDK");
             callback(err.message, null);
         }
-    }
-
+    },
     getNetworkOut: function(accessID, accessKey, instanceID, instanceRegion, callback) {
         winston.info('Getting metrics from AWS EC2');
         var startDate = getStartTime(new Date(), 20);
