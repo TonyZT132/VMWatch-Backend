@@ -21,7 +21,7 @@ module.exports = {
                 }],
                 Unit: "Percent",
                 Statistics: ["Average", "Maximum", "Minimum"],
-                MetricName: "CPUUtilization | NetworkOut",
+                MetricName: "NetworkOut",
                 StartTime: startDate,
                 EndTime: new Date(),
                 Period: 300
