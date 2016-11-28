@@ -168,7 +168,7 @@ Parse.Cloud.define("ec2WatchGetCPUUtilization", function(request, response) {
     var region = request.params.region;
 
     winston.info("Start EC2 Watch");
-    ec2Watch.getNetworkOut(accessID, accessKey, instanceID, region, function(error, data) {
+    ec2Watch.getCPUUtilization(accessID, accessKey, instanceID, region, function(error, data) {
         if (error) {
             response.error(error);
         } else {
