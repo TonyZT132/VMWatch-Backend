@@ -161,14 +161,16 @@ Parse.Cloud.define("deleteValidationRecord", function(request, response) {
 });
 
 /*Interface for Monitoring EC2 Data*/
-Parse.Cloud.define("ec2WatchGetCPUUtilization", function(request, response) {
+Parse.Cloud.define("ec2Watch", function(request, response) {
     var accessID = request.params.accessid;
     var accessKey = request.params.accesskey;
     var instanceID = request.params.instanceid;
     var region = request.params.region;
+    var metrics = request.params.metrics;
+    var range = request.params.range;
 
     winston.info("Start EC2 Watch");
-    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "CPUUtilization", 20, function(error, data) {
+    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, metrics, range, function(error, data) {
         if (error) {
             response.error(error);
         } else {

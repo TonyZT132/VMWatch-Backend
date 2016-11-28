@@ -53,6 +53,10 @@ function getParams(instanceID, startDate, metrics) {
             return networkInParams(instanceID, startDate);
         case "NetworkOut":
             return networkOutParams(instanceID, startDate);
+        case "DiskReadBytes":
+            return diskReadBytesParams(instanceID, startDate);
+        case "DiskWriteBytes":
+            return diskWriteBytesParams(instanceID, startDate);
         default:
             return null;
     }
@@ -100,6 +104,38 @@ function networkOutParams(instanceID, startDate) {
         Unit: "Bytes",
         Statistics: ["Average", "Maximum", "Minimum"],
         MetricName: "NetworkOut",
+        StartTime: startDate,
+        EndTime: new Date(),
+        Period: 300
+    };
+}
+
+function diskReadBytesParams(instanceID, startDate) {
+    return {
+        Namespace: "AWS/EC2",
+        Dimensions: [{
+            Name: "InstanceId",
+            Value: instanceID
+        }],
+        Unit: "Bytes",
+        Statistics: ["Average", "Maximum", "Minimum"],
+        MetricName: "DiskReadBytes",
+        StartTime: startDate,
+        EndTime: new Date(),
+        Period: 300
+    };
+}
+
+function diskWriteBytesParams(instanceID, startDate) {
+    return {
+        Namespace: "AWS/EC2",
+        Dimensions: [{
+            Name: "InstanceId",
+            Value: instanceID
+        }],
+        Unit: "Bytes",
+        Statistics: ["Average", "Maximum", "Minimum"],
+        MetricName: "DiskWriteBytes",
         StartTime: startDate,
         EndTime: new Date(),
         Period: 300
