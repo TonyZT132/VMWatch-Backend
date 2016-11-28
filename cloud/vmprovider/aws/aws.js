@@ -27,7 +27,7 @@ module.exports = {
             //     Period: 300
             // };
 
-            var params = returnCPUUtilizationParams(startDate)
+            var params = returnCPUUtilizationParams(instanceID, startDate);
 
             cloudwatch.getMetricStatistics(params, function(cloudWatchErr, response) {
                 var data = null; var error = null;
@@ -161,7 +161,7 @@ function getStartTime(date, minutes) {
     return new Date(date.getTime() - minutes*60000);
 }
 
-function returnCPUUtilizationParams(startDate){
+function returnCPUUtilizationParams(instanceID, startDate){
     return {
         Namespace: "AWS/EC2",
         Dimensions: [{
