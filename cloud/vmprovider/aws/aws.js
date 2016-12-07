@@ -20,18 +20,14 @@ module.exports = {
                 var error = null;
 
                 if (cloudWatchErr) {
-                    winston.error("Error: " + err);
+                    error = cloudWatchErr
+                    winston.error("Error: " + cloudWatchErr);
                     callback(error, data);
                 } else {
-                    try {
-                        winston.info("Sucessfully get data from CloudWatch");
-                        data = response;
-                    } catch (exception) {
-                        error = exception;
-                    } finally {
-                        winston.info("Returning data");
-                        callback(error, data);
-                    }
+                    winston.info("Sucessfully get data from CloudWatch");
+                    data = response;
+                    winston.info("Returning data");
+                    callback(error, data);
                 }
             });
         } catch (err) {
