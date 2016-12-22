@@ -164,9 +164,10 @@ Parse.Cloud.define("deleteValidationRecord", function(request, response) {
 Parse.Cloud.define("serviceRequest", function(request, response) {
     try {
         var fs = require('fs');
-        var obj = JSON.parse(fs.readFileSync('service.json', 'utf8'));
+        var obj = JSON.parse(fs.readFileSync('service', 'utf8'));
         response.success(obj)
     } catch (err) {
+        winston.error(err);
         response.error(err)
     }
 });
