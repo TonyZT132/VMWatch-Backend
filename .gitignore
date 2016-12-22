@@ -1,2 +1,4 @@
 .DS_Store
 cloud/.main.js.swp
+node_modules/
+npm-debug.log
