@@ -1,0 +1,23 @@
+{
+    "service": [{
+        "id": "0",
+        "name": "aws",
+        "avaliable": true
+    }, {
+        "id": "1",
+        "name": "azure",
+        "avaliable": false
+    }, {
+        "id": "2",
+        "name": "google",
+        "avaliable": false
+    }, {
+        "id": "3",
+        "name": "heroku",
+        "avaliable": false
+    }, {
+        "id": "4",
+        "name": "vmware",
+        "avaliable": false
+    }],
+}

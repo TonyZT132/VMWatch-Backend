@@ -160,6 +160,17 @@ Parse.Cloud.define("deleteValidationRecord", function(request, response) {
     });
 });
 
+/*Get serive avaliability*/
+Parse.Cloud.define("serviceRequest", function(request, response) {
+    try {
+        var fs = require('fs');
+        var obj = JSON.parse(fs.readFileSync('service.json', 'utf8'));
+        response.success(obj)
+    } catch (err) {
+        response.error(err)
+    }
+});
+
 /*Interface for Monitoring EC2 Data*/
 Parse.Cloud.define("ec2Watch", function(request, response) {
     var accessID = request.params.accessid;
