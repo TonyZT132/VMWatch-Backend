@@ -178,11 +178,11 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
     var region = request.params.region;
 
     var config = require('./config');
-    var cat = JSON.parse(config.METRICS_EC2);
+    var cat = config.METRICS_EC2;
 
     var result = [];
     console.log(cat);
-    
+
     winston.info("Start EC2 Watch");
     ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[0].name, cat.metrics[0].range, function(error, data) {
         if (error) {
