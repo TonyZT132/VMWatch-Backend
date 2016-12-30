@@ -179,15 +179,43 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
     var accessKey = request.params.accesskey;
     var instanceID = request.params.instanceid;
     var region = request.params.region;
-    var metrics = request.params.metrics;
-    var range = request.params.range;
 
+    var result = [];
     winston.info("Start EC2 Watch");
-    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, metrics, range, function(error, data) {
+    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "CPUUtilization", 10, function(error, data) {
         if (error) {
             response.error(error);
         } else {
-            response.success(data);
+            result.push(data);
+            ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "NetworkIn", 60, function(error, data) {
+                if (error) {
+                    response.error(error);
+                } else {
+                    result.push(data);
+                    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "NetworkOut", 60, function(error, data) {
+                        if (error) {
+                            response.error(error);
+                        } else {
+                            result.push(data);
+                            ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "DiskReadBytes", 60, function(error, data) {
+                                if (error) {
+                                    response.error(error);
+                                } else {
+                                    result.push(data);
+                                    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "DiskWriteBytes", 60, function(error, data) {
+                                        if (error) {
+                                            response.error(error);
+                                        } else {
+                                            result.push(data);
+                                            response.success(JSON.stringify(result));
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
     });
 });
