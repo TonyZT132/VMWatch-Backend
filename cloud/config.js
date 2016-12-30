@@ -1,4 +1,4 @@
-{
+var SERVICE_CONFIG = {
     "service": [{
         "id": "0",
         "name": "aws",
@@ -20,4 +20,6 @@
         "name": "vmware",
         "avaliable": false
     }],
-}
+};
+
+exports.SERVICE_CONFIG = SERVICE_CONFIG;
