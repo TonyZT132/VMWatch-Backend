@@ -177,29 +177,32 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
     var instanceID = request.params.instanceid;
     var region = request.params.region;
 
+    var config = require('./config');
+    var cat = JSON.parse(config.METRICS_EC2);
+
     var result = [];
     winston.info("Start EC2 Watch");
-    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "CPUUtilization", 10, function(error, data) {
+    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[0].name, cat.metrics[0].range, function(error, data) {
         if (error) {
             response.error(error);
         } else {
             result.push(data);
-            ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "NetworkIn", 60, function(error, data) {
+            ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[1].name, cat.metrics[1].range, function(error, data) {
                 if (error) {
                     response.error(error);
                 } else {
                     result.push(data);
-                    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "NetworkOut", 60, function(error, data) {
+                    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[2].name, cat.metrics[2].range, function(error, data) {
                         if (error) {
                             response.error(error);
                         } else {
                             result.push(data);
-                            ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "DiskReadBytes", 60, function(error, data) {
+                            ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[3].name, cat.metrics[3].range, function(error, data) {
                                 if (error) {
                                     response.error(error);
                                 } else {
                                     result.push(data);
-                                    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, "DiskWriteBytes", 60, function(error, data) {
+                                    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[4].name, cat.metrics[4].range, function(error, data) {
                                         if (error) {
                                             response.error(error);
                                         } else {
