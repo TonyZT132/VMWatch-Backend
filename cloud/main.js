@@ -181,7 +181,6 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
     var cat = config.METRICS_EC2;
 
     var result = [];
-    console.log(cat);
 
     winston.info("Start EC2 Watch");
     ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[0].name, cat.metrics[0].range, function(error, data) {
