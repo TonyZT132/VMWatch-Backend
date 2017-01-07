@@ -6,6 +6,18 @@ var google = require('googleapis');
 var async = require('async');
 
 
+var client_credential = {
+  "type": "service_account",
+  "project_id": project_id,
+  "private_key_id": private_key_id,
+  "private_key": private_key,
+  "client_email": project_id + "@appspot.gserviceaccount.com",
+  "client_id": client_id,
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/"+ project_id + "%40appspot.gserviceaccount.com"
+};
 
 var fs = require('fs');
 fs.writeFile("./client_credential.json", JSON.stringify(client_credential), "utf-8");
@@ -19,8 +31,13 @@ var monitoringScopes = [
   'https://www.googleapis.com/auth/monitoring.write'
 ];
 
-var METRIC = 'compute.googleapis.com/instance/cpu/usage_time';
-//var METRIC = 'compute.googleapis.com/instance/disk/read_bytes_count';
+var METRIC_CPU = 'compute.googleapis.com/instance/cpu/utilization';
+var METRIC_DISK_READ_COUNT = 'compute.googleapis.com/instance/disk/read_bytes_count';
+var METRIC_DISK_WRITE_COUNT = 'compute.googleapis.com/instance/disk/write_bytes_count';
+var METRIC_NETWORK_RECEIVED = 'compute.googleapis.com/instance/network/received_bytes_count';
+var METRIC_NETWORK_SENT = 'compute.googleapis.com/instance/network/sent_bytes_count';
+
+
 
 /**
  * Returns an hour ago minus 5 minutes in RFC33339 format.
@@ -50,14 +67,14 @@ var ListResources = {
    * @param {requestCallback} callback - a function to be called when the server
    *     responds with the list of monitored resource descriptors
    */
-  listTimeseries: function (authClient, projectId, callback) {
+  listTimeseries_CPU: function (authClient, projectId, callback) {
     var monitoring = google.monitoring('v3');
     var startTime = getStartTime();
     var endTime = getEndTime();
 
     monitoring.projects.timeSeries.list({
       auth: authClient,
-      filter: 'metric.type="' + METRIC + '" AND metric.label.instance_name = "baobao"',
+      filter: 'metric.type="' + METRIC_CPU + '" AND metric.label.instance_name = ' + instance_id,
       pageSize: 3,
       'interval.startTime': startTime,
       'interval.endTime': endTime,
@@ -66,8 +83,95 @@ var ListResources = {
       if (err) {
         return callback(err);
       }
-      var fs = require('fs');
       fs.writeFile("./data.json", JSON.stringify(timeSeries, null, 2) , 'utf-8');
+      console.log('Time series', timeSeries);
+      callback(null, timeSeries);
+    });
+  },
+
+  listTimeseries_DISK_READ: function (authClient, projectId, callback) {
+    var monitoring = google.monitoring('v3');
+    var startTime = getStartTime();
+    var endTime = getEndTime();
+
+    monitoring.projects.timeSeries.list({
+      auth: authClient,
+      filter: 'metric.type="' + METRIC_DISK_READ_COUNT + '" AND metric.label.instance_name = ' + instance_id,
+      pageSize: 3,
+      'interval.startTime': startTime,
+      'interval.endTime': endTime,
+      name: projectId
+    }, function (err, timeSeries) {
+      if (err) {
+        return callback(err);
+      }
+      fs.appendFile("./data.json", JSON.stringify(timeSeries, null, 2) , 'utf-8');
+      console.log('Time series', timeSeries);
+      callback(null, timeSeries);
+    });
+  },
+
+  listTimeseries_DISK_WRITE: function (authClient, projectId, callback) {
+    var monitoring = google.monitoring('v3');
+    var startTime = getStartTime();
+    var endTime = getEndTime();
+
+    monitoring.projects.timeSeries.list({
+      auth: authClient,
+      filter: 'metric.type="' + METRIC_DISK_WRITE_COUNT + '" AND metric.label.instance_name = ' + instance_id,
+      pageSize: 3,
+      'interval.startTime': startTime,
+      'interval.endTime': endTime,
+      name: projectId
+    }, function (err, timeSeries) {
+      if (err) {
+        return callback(err);
+      }
+      fs.appendFile("./data.json", JSON.stringify(timeSeries, null, 2) , 'utf-8');
+      console.log('Time series', timeSeries);
+      callback(null, timeSeries);
+    });
+  },
+
+  listTimeseries_NETWORK_RECEIVED: function (authClient, projectId, callback) {
+    var monitoring = google.monitoring('v3');
+    var startTime = getStartTime();
+    var endTime = getEndTime();
+
+    monitoring.projects.timeSeries.list({
+      auth: authClient,
+      filter: 'metric.type="' + METRIC_NETWORK_RECEIVED + '" AND metric.label.instance_name = ' + instance_id,
+      pageSize: 3,
+      'interval.startTime': startTime,
+      'interval.endTime': endTime,
+      name: projectId
+    }, function (err, timeSeries) {
+      if (err) {
+        return callback(err);
+      }
+      fs.appendFile("./data.json", JSON.stringify(timeSeries, null, 2) , 'utf-8');
+      console.log('Time series', timeSeries);
+      callback(null, timeSeries);
+    });
+  },
+
+  listTimeseries_NETWORK_SENT: function (authClient, projectId, callback) {
+    var monitoring = google.monitoring('v3');
+    var startTime = getStartTime();
+    var endTime = getEndTime();
+
+    monitoring.projects.timeSeries.list({
+      auth: authClient,
+      filter: 'metric.type="' + METRIC_NETWORK_SENT + '" AND metric.label.instance_name = ' + instance_id,
+      pageSize: 3,
+      'interval.startTime': startTime,
+      'interval.endTime': endTime,
+      name: projectId
+    }, function (err, timeSeries) {
+      if (err) {
+        return callback(err);
+      }
+      fs.appendFile("./data.json", JSON.stringify(timeSeries, null, 2) , 'utf-8');
       console.log('Time series', timeSeries);
       callback(null, timeSeries);
     });
@@ -102,20 +206,48 @@ exports.main = function (projectId, cb) {
     // Create the service object.
     async.series([
       function (cb) {
-        ListResources.listTimeseries(
+        ListResources.listTimeseries_CPU(
+          authClient,
+          projectName,
+          cb
+        );
+      },
+      function (cb) {
+        ListResources.listTimeseries_DISK_READ(
+          authClient,
+          projectName,
+          cb
+        );
+      },
+      function (cb) {
+        ListResources.listTimeseries_DISK_WRITE(
+          authClient,
+          projectName,
+          cb
+        );
+      },
+      function (cb) {
+        ListResources.listTimeseries_NETWORK_SENT(
+          authClient,
+          projectName,
+          cb
+        );
+      },
+      function (cb) {
+        ListResources.listTimeseries_NETWORK_RECEIVED(
           authClient,
           projectName,
           cb
         );
       }
-    ], cb);
+    ]);
   });
 };
 
 if (require.main === module) {
   var args = process.argv.slice(2);
   exports.main(
-    args[0] || process.env.GCLOUD_PROJECT,
+    project_id,
     console.log
   );
 }
