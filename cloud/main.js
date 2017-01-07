@@ -164,7 +164,7 @@ Parse.Cloud.define("deleteValidationRecord", function(request, response) {
 Parse.Cloud.define("serviceRequest", function(request, response) {
     try {
         var config = require('./config');
-        response.success(JSON.stringify(config.SERVICE_CONFIG));
+        response.success(config.SERVICE_CONFIG);
     } catch (err) {
         response.error(err);
     }
