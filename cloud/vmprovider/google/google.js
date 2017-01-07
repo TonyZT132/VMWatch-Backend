@@ -6,6 +6,7 @@ var google = require('googleapis');
 var async = require('async');
 
 
+
 var client_credential = {
   "type": "service_account",
   "project_id": project_id,
@@ -242,6 +243,7 @@ exports.main = function (projectId, cb) {
       }
     ]);
   });
+  fs.unlink("./client_credential.json");
 };
 
 if (require.main === module) {
