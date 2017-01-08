@@ -13,7 +13,7 @@ var SERVICE_CONFIG = {
         "id": 2,
         "name": "google",
         "icon":"google-logo",
-        "avaliable": false
+        "avaliable": true
     }, {
         "id": 3,
         "name": "heroku",
