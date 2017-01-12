@@ -4,19 +4,6 @@ var winston = require('winston');
 var async = require('async');
 var google = require('googleapis');
 
-var client_credential = {
-  "type": "service_account",
-  "project_id": project_id,
-  "private_key_id": private_key_id,
-  "private_key": private_key,
-  "client_email": project_id + "@appspot.gserviceaccount.com",
-  "client_id": client_id,
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://accounts.google.com/o/oauth2/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/"+ project_id + "%40appspot.gserviceaccount.com"
-};
-
 var fs = require('fs');
 var obj={};
 
@@ -208,7 +195,7 @@ var ListResources = {
 };
 
 module.exports = {
-    getGoogleMonitoring: function(private_key_id, private_key,client_id,project_id,instance_id,callback) {
+    getGoogleMonitoring: function(private_key_id, private_key,client_id, client_email, project_id, instance_id, callback) {
         winston.info('Setting client credentials for google cloud');
         winston.info(instance_id);
         try{
@@ -217,12 +204,12 @@ module.exports = {
                 "project_id": project_id,
                 "private_key_id": private_key_id,
                 "private_key": private_key,
-                "client_email": project_id + "@appspot.gserviceaccount.com",
+                "client_email": client_email,
                 "client_id": client_id,
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
                 "token_uri": "https://accounts.google.com/o/oauth2/token",
                 "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-                "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/"+ project_id + "%40appspot.gserviceaccount.com"
+                "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/"+ client_email.split("@")[0] + "%40appspot.gserviceaccount.com"
             };
             fs.writeFile("./client_credential.json", JSON.stringify(client_credential), "utf-8");
             process.env['GOOGLE_APPLICATION_CREDENTIALS'] = "client_credential.json";
@@ -236,6 +223,7 @@ module.exports = {
                 // Create the service object.
                 ListResources.listTimeseries_CPU(authClient,projectName,instance_id,function(error){
                     if(error){
+                        winston.info('ERROR');
                         return callback(err,null);
                     }
                     ListResources.listTimeseries_DISK_READ(authClient,projectName,instance_id,function(error){
