@@ -2,11 +2,7 @@ var winston = require('winston');
 
 'use strict';
 var async = require('async');
-<<<<<<< HEAD
 var google = require('googleapis');
-=======
-
-
 
 var client_credential = {
   "type": "service_account",
@@ -21,7 +17,6 @@ var client_credential = {
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/"+ project_id + "%40appspot.gserviceaccount.com"
 };
 
->>>>>>> 5453a04760f792362ddc09da99d1698c59a698de
 var fs = require('fs');
 var obj={};
 
