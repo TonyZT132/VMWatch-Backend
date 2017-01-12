@@ -194,26 +194,6 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
 /*Store the access data for ec2*/
 Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     winston.info(request.params.accessid);
-
-    var private_key_id = request.params.privatekeyid;
-    var private_key = request.params.privatekey;
-    var client_id = request.params.clientid;
-    var project_id = request.params.projectid;
-    var instance_id = request.params.instanceid;
-
-    var project_id = 'test-ece496';
-    var private_key_id = "1e35818b69d83e7eb4faca3bbb2deda113e10a76";
-    var private_key = "-----BEGIN PRIVATE KEY-----\nMIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDRx5ALYhGjJlDH\nEIkI4Sc+0ZHQF34DW7K/4OJZo1Q4iZT6nAVn/4Lc+R8ynIpalt/IrLunY0AF86PO\naqFwZDcsrnet39DXuw5G+HfkLb68tk24Mg3/qUPWOhNgFTlHeX5rYnsgpQMbZ/10\nBFXDoEdTZIfFs2I5EVC8RxFLZyM+araoA67ja7pNJ/b76NAGlhyuXM5mo+2y9G3I\nc1whkVuvw8Vfs0dKM45ROnPBJ26xjw+rzGfRb+j77YSf1d9RGijpAgEpHWzzzf/M\nnUGLr8C7hODZVC+szeNrOoOrQABp96AQc4MWi7PZNFyEEsWs01H0FLx87khuhL3F\ncJ08oQc3AgMBAAECggEBAInrKTHCrRPVagAmR+HVnWa4g6QK/ecZT4DFSitirUlq\ncs786rUAELpU8wTkVDXQwZn+rnUTVJFVKFnaUv9Ac+HlZnujDXv32CAi1TfoN2F8\nfcZe6kMutpHOptRhv8HVB590JL1Gn69SBBlVjElMQ/h4vKbnE+mvD6RpGN65FTu/\n3hssyhXZ1F1+E5S4k1FhxtYPX1+ENUC3Huv1cCrsuUpADKfQhtXRrE1xNMFPt86v\ntwLtOq2IwPUwkmiIKpon3qH5Gy6R0N2Tfh7+muSzEJZE0iWvZ/fC7qbaW3F+0Wfg\nbQgVixepbjUucK54HQ2QHRmAfudUDT2LKb27AeSOU5ECgYEA8NYJd7FwMKpVLK/j\n1r7aZT7trKIcoxrTNymicoZm110V+4kx4ahbCRJQYgzrLYETDMcXDfbhOaTt4+5i\nBPZOD50AfiCxd2NqM1Tp8M3D3CWcPmWSoodcvmYP2wVMeKZ81G5AdOMVZhmc6BoV\niebsrHWvGkjIKpSlZMsK5/U99kkCgYEA3vzvUUG0Rj75c28UP8CQd6F+5F0AOzfb\noQmbGZNLVhYsxSCMBDhE0iIzv4TCnsboSld3ZtNLWOvpjrtDslG0Oi2LqXPNRyNW\niIAPzQqgRKm+r3L374evSjcNF5+0i6CasJXCsgGM+iRzOv2C15P8Vzwp94xI7iM2\nJpVOAoVBEX8CgYEAmuHbdtlrADEa08FOMlXNGB2vNj2PUym2OhyRdzuOOeSIdZqW\ntLvTx/K6NUR/nmUK/kWvQvDJiYvS3an56Z0JOKtMnNCjsNcDfn2WcaGy2wppAAvM\nkK+i6mOywLUYp+LSFr/Mvh8oLOA981qLDYOwI30PnkS+TfwIndiia+hg79kCgYEA\nyvbmzctET3waidtdTvnzhTBV035jK4OYQWgA6LKNK/pbHcKWL3EYEzxWZchtbSAX\nZzNd1xYTywhQOj5xS+naZen26XIiMtITfYMy3qsBXf4zNncq/bc+8gpRvGL9buns\nYzatVGDc9QIgcF03rwlf8fctK8lgyID8VPopW1n28/kCgYEArw49/Zp6aYo5EKFK\nKqG03G9Sh576Vt3ZOoawM10vQ+QhpbU+19jrWD1MSfWEN1dYn0Sb8zRuBebWeOij\ngXA+68p83fW/eJ00FMwuLaoSbZsNQxigH2WdEd/34lmeCUmCuaKuj1L/YlRSxl9e\nA3LwNt3jNITm9j/GTEJyFAGrb8Y=\n-----END PRIVATE KEY-----\n";
-    var client_id = "102170527589653934723";
-    var instance_id = "baobao";
-    googleWatch.getGoogleMonitoring(private_key_id, private_key,client_id,project_id,instance_id, function(error, data) {
-        if (error) {
-            response.error(error);
-        } else {
-            response.success(JSON.stringify(data));
-
-        }
-    });
 });
 
 
