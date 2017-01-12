@@ -165,11 +165,12 @@ Parse.Cloud.define("deleteValidationRecord", function(request, response) {
 Parse.Cloud.define("serviceRequest", function(request, response) {
     try {
         var config = require('./config');
-        response.success(JSON.stringify(config.SERVICE_CONFIG));
+        response.success(config.SERVICE_CONFIG);
     } catch (err) {
         response.error(err);
     }
 });
+
 
 /*Interface for Monitoring EC2 Data*/
 Parse.Cloud.define("ec2Watch", function(request, response) {
@@ -177,47 +178,15 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
     var accessKey = request.params.accesskey;
     var instanceID = request.params.instanceid;
     var region = request.params.region;
-
-    var config = require('./config');
-    var cat = config.METRICS_EC2;
-
-    var result = [];
+    var metrics = request.params.metrics;
+    var range = request.params.range;
 
     winston.info("Start EC2 Watch");
-    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[0].name, cat.metrics[0].range, function(error, data) {
+    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, metrics, range, function(error, data) {
         if (error) {
             response.error(error);
         } else {
-            result.push(data);
-            ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[1].name, cat.metrics[1].range, function(error, data) {
-                if (error) {
-                    response.error(error);
-                } else {
-                    result.push(data);
-                    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[2].name, cat.metrics[2].range, function(error, data) {
-                        if (error) {
-                            response.error(error);
-                        } else {
-                            result.push(data);
-                            ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[3].name, cat.metrics[3].range, function(error, data) {
-                                if (error) {
-                                    response.error(error);
-                                } else {
-                                    result.push(data);
-                                    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, cat.metrics[4].name, cat.metrics[4].range, function(error, data) {
-                                        if (error) {
-                                            response.error(error);
-                                        } else {
-                                            result.push(data);
-                                            response.success(JSON.stringify(result));
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
+            response.success(data);
         }
     });
 });
