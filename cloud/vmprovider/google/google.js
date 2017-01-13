@@ -211,6 +211,7 @@ module.exports = {
                 "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
                 "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/"+ client_email.split("@")[0] + "%40appspot.gserviceaccount.com"
             };
+            winston.info(client_credential);
             fs.writeFile("./client_credential.json", JSON.stringify(client_credential), "utf-8");
             process.env['GOOGLE_APPLICATION_CREDENTIALS'] = "client_credential.json";
             var projectName = 'projects/' + project_id;
