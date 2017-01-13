@@ -199,12 +199,12 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
 
 Parse.Cloud.define("GoogleWatch", function(request, response) {
   var privateKeyID = request.params.privatekeyid;
-  var privateKey = request.params.privatekey;
+  var privateKey = "-----BEGIN PRIVATE KEY-----\n" + request.params.privatekey + "-----END PRIVATE KEY-----\n";
   var clientID = request.params.clientid;
   var clientEmail = request.params.clientemail;
   var instanceID = request.params.instanceid;
   var projectID = request.params.projectid;
-  privateKey = "-----BEGIN PRIVATE KEY-----\n" + privateKey + "-----END PRIVATE KEY-----\n";
+
   winston.info(privateKey);
   googleWatch.getGoogleMonitoring(privateKeyID, privateKey,clientID,clientEmail,projectID,instanceID, function(error, data) {
       if (error) {
