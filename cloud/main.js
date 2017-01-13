@@ -204,7 +204,7 @@ Parse.Cloud.define("GoogleWatch", function(request, response) {
   var clientEmail = request.params.clientemail;
   var instanceID = request.params.instanceid;
   var projectID = request.params.projectid;
-  newprivateKey = privateKey.replace('\\n', '\n')
+  var newprivateKey = privateKey.replace(/\\n/g, "\n");
   googleWatch.getGoogleMonitoring(privateKeyID, newprivateKey, clientID,clientEmail,projectID,instanceID, function(error, data) {
       if (error) {
           response.error(error);
