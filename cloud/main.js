@@ -175,11 +175,13 @@ Parse.Cloud.define("serviceRequest", function(request, response) {
 Parse.Cloud.define("ec2UserVerification", function(request, response) {
     var accessID = request.params.accessid;
     var accessKey = request.params.accesskey;
-    if (ec2Watch.ec2UserVerification(accessID, accessKey) == true) {
-        response.success("Valid access credential");
-    } else {
-        response.error("Invalid access credential");
-    }
+    ec2Watch.ec2UserVerification(accessID, accessKey, function(error, info) {
+        if (error) {
+            response.error(error);
+        } else {
+            response.success(info);
+        }
+    });
 });
 
 /*Interface for Monitoring EC2 Data*/

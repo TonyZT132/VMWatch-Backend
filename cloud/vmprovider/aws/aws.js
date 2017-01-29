@@ -9,7 +9,7 @@ module.exports = {
         });
 
         var iam = new AWS.IAM();
-        iam.getAccountSummary(function(err, data) {
+        iam.getAccountSummary(function(err, data, callback) {
             if (err) {
                 winston.info(err);
                 winston.info("-----------------------");
@@ -17,14 +17,14 @@ module.exports = {
                 winston.info(err.code);
                 if(String(err.code) == "InvalidClientTokenId") {
                     winston.error(err.message);
-                    return false;
+                    callback("Invalid access credential", null);
                 }else{
-                    return true;
+                    callback(null, "Valid access credential");
                 }
             }
             else {
                 winston.info("Valid Access ID");
-                return true;
+                callback(null, "Valid access credential");
             }
         });
     },
