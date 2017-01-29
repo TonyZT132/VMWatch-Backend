@@ -11,7 +11,7 @@ module.exports = {
         var iam = new AWS.IAM();
         iam.getAccountSummary(function(err, data) {
             if (err) {
-                if(String(err.code) == "InvalidClientTokenId") {
+                if(String(err.code) == "InvalidClientTokenId" || String(err.code) == "SignatureDoesNotMatch") {
                     winston.error(err.message);
                     callback("Invalid access credential", null);
                 }else{
