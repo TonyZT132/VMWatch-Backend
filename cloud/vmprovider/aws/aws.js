@@ -12,7 +12,7 @@ module.exports = {
         iam.getAccountSummary(function(err, data) {
             if (err) {
                 winston.info("Wrong access id");
-                winston.warning(err, err.stack); // an error occurred
+                winston.error(err, err.stack); // an error occurred
                 return false;
             }
             else {
