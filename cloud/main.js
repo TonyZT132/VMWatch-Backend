@@ -171,6 +171,16 @@ Parse.Cloud.define("serviceRequest", function(request, response) {
     }
 });
 
+/*Get serive avaliability*/
+Parse.Cloud.define("ec2UserVerification", function(request, response) {
+    var accessID = request.params.accessid;
+    var accessKey = request.params.accesskey;
+    if (ec2Watch.ec2UserVerification(accessID, accessKey) == true) {
+        response.success("Valid access credential");
+    } else {
+        response.error("Invalid access credential");
+    }
+});
 
 /*Interface for Monitoring EC2 Data*/
 Parse.Cloud.define("ec2Watch", function(request, response) {
@@ -198,18 +208,18 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
 
 
 Parse.Cloud.define("GoogleWatch", function(request, response) {
-  var privateKeyID = request.params.privatekeyid;
-  var privateKey = request.params.privatekey;
-  var clientID = request.params.clientid;
-  var clientEmail = request.params.clientemail;
-  var instanceID = request.params.instanceid;
-  var projectID = request.params.projectid;
-  var newprivateKey = privateKey.replace(/\\n/g, "\n");
-  googleWatch.getGoogleMonitoring(privateKeyID, newprivateKey, clientID,clientEmail,projectID,instanceID, function(error, data) {
-      if (error) {
-          response.error(error);
-      } else {
-          response.success(JSON.stringify(data));
-      }
-  });
+    var privateKeyID = request.params.privatekeyid;
+    var privateKey = request.params.privatekey;
+    var clientID = request.params.clientid;
+    var clientEmail = request.params.clientemail;
+    var instanceID = request.params.instanceid;
+    var projectID = request.params.projectid;
+    var newprivateKey = privateKey.replace(/\\n/g, "\n");
+    googleWatch.getGoogleMonitoring(privateKeyID, newprivateKey, clientID, clientEmail, projectID, instanceID, function(error, data) {
+        if (error) {
+            response.error(error);
+        } else {
+            response.success(JSON.stringify(data));
+        }
+    });
 });

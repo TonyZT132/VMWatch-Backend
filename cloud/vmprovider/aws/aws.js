@@ -1,6 +1,27 @@
 var winston = require('winston');
 
 module.exports = {
+    ec2UserVerification: function(accessID, accessKey) {
+        var AWS = require('aws-sdk');
+        AWS.config.update({
+            accessKeyId: accessID,
+            secretAccessKey: accessKey,
+        });
+
+        var iam = new AWS.IAM();
+        iam.getAccountSummary(function(err, data) {
+            if (err) {
+                winston.info("Wrong access id");
+                winston.warning(err, err.stack); // an error occurred
+                return false;
+            }
+            else {
+                winston.info("Valid access id");
+                winston.info(data); // successful response
+                return true;
+            }
+        });
+    },
     getMonitoringData: function(accessID, accessKey, instanceID, instanceRegion, metrics, range, callback) {
         winston.info('Getting metrics from AWS EC2');
         var startDate = getStartTime(new Date(), range);
