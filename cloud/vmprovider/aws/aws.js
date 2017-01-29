@@ -15,7 +15,7 @@ module.exports = {
                 winston.info("-----------------------");
                 winston.info(err.message);
                 winston.info(err.code);
-                if(err.code == "InvalidClientTokenId") {
+                if(String(err.code) == "InvalidClientTokenId") {
                     winston.error(err.message);
                     return false;
                 }else{
