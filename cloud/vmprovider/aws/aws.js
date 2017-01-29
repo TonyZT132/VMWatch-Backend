@@ -11,14 +11,15 @@ module.exports = {
         var iam = new AWS.IAM();
         iam.getAccountSummary(function(err, data) {
             if (err) {
-                winston.info("Wrong access id");
-                winston.error(err, err.stack); // an error occurred
-                winston.info(err.code);
-                return false;
+                if(err.code == "InvalidClientTokenId") {
+                    winston.error(err.message);
+                    return false;
+                }else{
+                    return true;
+                }
             }
             else {
-                winston.info("Valid access id");
-                winston.info(data); // successful response
+                winston.info("Valid Access ID");
                 return true;
             }
         });
