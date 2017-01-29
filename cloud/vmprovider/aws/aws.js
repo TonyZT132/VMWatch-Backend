@@ -1,7 +1,7 @@
 var winston = require('winston');
 
 module.exports = {
-    ec2UserVerification: function(accessID, accessKey) {
+    ec2UserVerification: function(accessID, accessKey, callback) {
         var AWS = require('aws-sdk');
         AWS.config.update({
             accessKeyId: accessID,
@@ -9,7 +9,7 @@ module.exports = {
         });
 
         var iam = new AWS.IAM();
-        iam.getAccountSummary(function(err, data, callback) {
+        iam.getAccountSummary(function(err, data) {
             if (err) {
                 winston.info(err);
                 winston.info("-----------------------");
