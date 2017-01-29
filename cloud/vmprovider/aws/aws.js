@@ -13,7 +13,7 @@ module.exports = {
             if (err) {
                 winston.info("Wrong access id");
                 // winston.error(err, err.stack); // an error occurred
-                winson.info(err.code);
+                winston.info(err.code);
                 return false;
             }
             else {
