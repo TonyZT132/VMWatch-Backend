@@ -11,6 +11,7 @@ module.exports = {
         var iam = new AWS.IAM();
         iam.getAccountSummary(function(err, data) {
             if (err) {
+                winston.info(err)
                 if(err.code == "InvalidClientTokenId") {
                     winston.error(err.message);
                     return false;
