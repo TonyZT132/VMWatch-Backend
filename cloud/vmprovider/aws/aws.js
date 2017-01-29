@@ -11,10 +11,6 @@ module.exports = {
         var iam = new AWS.IAM();
         iam.getAccountSummary(function(err, data) {
             if (err) {
-                winston.info(err);
-                winston.info("-----------------------");
-                winston.info(err.message);
-                winston.info(err.code);
                 if(String(err.code) == "InvalidClientTokenId") {
                     winston.error(err.message);
                     callback("Invalid access credential", null);
