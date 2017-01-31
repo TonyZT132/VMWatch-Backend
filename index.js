@@ -45,7 +45,7 @@ var port = process.env.PORT || 1337;
 var httpServer = http.createServer(app);
 // httpServer.setSecure(credentials);
 httpServer.listen(port, function() {
-    winston.info('parse-server-example running on port ' + port + '.');
+    winston.info('VMWatch is running on port ' + port + '.');
 });
 
 // This will enable the Live Query real-time server
