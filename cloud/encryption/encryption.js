@@ -1,26 +1,30 @@
 var CryptoJS = require("crypto-js");
-var passphrase = process.env.PASSPHRASE;
 
-// it is not necessary that this be private, just random on a per-user basis
-var salt = crypto.randomBytes(32);
+module.exports = {
+    requestMasterKey: function() {
+        winston.info("Requesting master key");
 
-// you want this to slow down an attacker, but not yourself or a user
-// if you use mobile devices or hobby hardware, keep it well under 10,000
-// it is not necessary that this be private
-var iterations = 267;
+        var passphrase = process.env.PASSPHRASE;
+        // random on a per-user basis
+        var salt = crypto.randomBytes(32);
 
-var keyByteLength = 32; // desired length for an AES key
+        // keep it well under 10,000
+        var iterations = 267;
 
-crypto.pbkdf2(passphrase, salt, iterations, keyByteLength, 'sha256', function (err, bytes) {
-    console.log(bytes.toString('hex'));
-});
+        var keyByteLength = 32; // desired length for an AES key
 
-
-// Encrypt
-var ciphertext = CryptoJS.AES.encrypt('my message', 'secret key 123');
-
-// Decrypt
-var bytes  = CryptoJS.AES.decrypt(ciphertext.toString(), 'secret key 123');
-var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-
-console.log(plaintext);
+        crypto.pbkdf2(passphrase, salt, iterations, keyByteLength, 'sha256', function(err, bytes) {
+            console.log(bytes.toString('hex'));
+        });
+    },
+    encrypt: function() {
+        winston.info("Proceeding encryption");
+        var ciphertext = CryptoJS.AES.encrypt('my message', 'secret key 123');
+    },
+    decrypt: function() {
+        winston.info("Precessing Decryption");
+        // Decrypt
+        var bytes = CryptoJS.AES.decrypt(ciphertext.toString(), 'secret key 123');
+        var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+    }
+};
