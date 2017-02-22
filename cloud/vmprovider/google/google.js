@@ -224,24 +224,24 @@ module.exports = {
                 // Create the service object.
                 ListResources.listTimeseries_CPU(authClient,projectName,instance_id,function(error){
                     if(error){
-                        winston.info('ERROR');
-                        return callback(err,null);
+                        winston.info(error);
+                        return callback(error,null);
                     }
                     ListResources.listTimeseries_DISK_READ(authClient,projectName,instance_id,function(error){
                         if(error){
-                            return callback(err,null);
+                            return callback(error,null);
                         }
                         ListResources.listTimeseries_DISK_WRITE(authClient,projectName,instance_id,function(error){
                             if(error){
-                                return callback(err,null);
+                                return callback(error,null);
                             }
                             ListResources.listTimeseries_NETWORK_SENT(authClient,projectName,instance_id,function(error){
                                 if(error){
-                                    return callback(err,null);
+                                    return callback(error,null);
                                 }
                                 ListResources.listTimeseries_NETWORK_RECEIVED(authClient,projectName,instance_id,function(error){
                                     if(error){
-                                        return callback(err,null);
+                                        return callback(error,null);
                                     }
                                     winston.info("complete metrix retriving");
                                     callback(null,obj);
