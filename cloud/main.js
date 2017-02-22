@@ -208,6 +208,7 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
 Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     winston.info("Start Test");
     var t = encryption.encrypt("testvmwatch");
+    winston.info("Encryption: " + t);
     winston.info("Text: " + encryption.decrypt(t));
     response.success("test done");
 });
