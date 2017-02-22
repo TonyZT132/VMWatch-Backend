@@ -206,8 +206,9 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
 
 /*Store the access data for ec2*/
 Parse.Cloud.define("ec2UserDataStore", function(request, response) {
-    winston.info(request.params.accessid);
+    winston.info("Start Test");
     encryption.requestMasterKey();
+    response.success("test done");
 });
 
 
