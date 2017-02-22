@@ -1,4 +1,5 @@
 var CryptoJS = require("crypto-js");
+var crypto = require('crypto');
 var winston = require('winston');
 
 module.exports = {
