@@ -3,6 +3,7 @@ var winston = require('winston');
 var twilioSMS = require('./twilio/twilioSMS');
 var ec2Watch = require('./vmprovider/aws/aws');
 var googleWatch = require('./vmprovider/google/google')
+var encryption = require('./encryption/encryption');
 
 /*Request SMS Validation Code*/
 Parse.Cloud.define("sendCode", function(request, response) {
@@ -206,6 +207,7 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
 /*Store the access data for ec2*/
 Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     winston.info(request.params.accessid);
+    encryption.requestMasterKey();
 });
 
 
