@@ -1,4 +1,5 @@
 var CryptoJS = require("crypto-js");
+var winston = require('winston');
 
 module.exports = {
     requestMasterKey: function() {
