@@ -226,7 +226,7 @@ Parse.Cloud.define("GoogleWatch", function(request, response) {
         if (error) {
             response.error(error);
         } else {
-            response.success(JSON.stringify(data));
+            response.success(data);
         }
     });
 });
