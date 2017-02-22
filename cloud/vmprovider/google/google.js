@@ -225,23 +225,23 @@ module.exports = {
                 ListResources.listTimeseries_CPU(authClient,projectName,instance_id,function(error){
                     if(error){
                         winston.info(error);
-                        return callback(error,null);
+                        return callback(err,null);
                     }
                     ListResources.listTimeseries_DISK_READ(authClient,projectName,instance_id,function(error){
                         if(error){
-                            return callback(error,null);
+                            return callback(err,null);
                         }
                         ListResources.listTimeseries_DISK_WRITE(authClient,projectName,instance_id,function(error){
                             if(error){
-                                return callback(error,null);
+                                return callback(err,null);
                             }
                             ListResources.listTimeseries_NETWORK_SENT(authClient,projectName,instance_id,function(error){
                                 if(error){
-                                    return callback(error,null);
+                                    return callback(err,null);
                                 }
                                 ListResources.listTimeseries_NETWORK_RECEIVED(authClient,projectName,instance_id,function(error){
                                     if(error){
-                                        return callback(error,null);
+                                        return callback(err,null);
                                     }
                                     winston.info("complete metrix retriving");
                                     callback(null,obj);
