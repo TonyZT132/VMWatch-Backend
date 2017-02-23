@@ -212,8 +212,10 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     var accessKey = request.params.accesskey;
     var userID = request.params.userid;
 
+    logger("Generating encrypted data obj");
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
     getUser(userID).then(function(user) {
+            logger("User Found");
             if (containsCredential(user.objectId, accessID, accessKey) == false) {
                 var credentialData = new Parse.Object.extend("AWSCredentialStorageTable");
                 credentialData.set("userID", user.objectId);
@@ -229,6 +231,22 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
         }
     );
 });
+
+function getUser(userId) {
+    Parse.Cloud.useMasterKey();
+    var userQuery = new Parse.Query(Parse.User);
+    userQuery.equalTo("objectId", userId);
+
+    return userQuery.first({
+        success: function(userRetrieved) {
+            return userRetrieved;
+        },
+        error: function(error) {
+            return error;
+        }
+    });
+};
+
 
 function containsCredential(userID, accessID, accessKey) {
     var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
@@ -251,22 +269,6 @@ function containsCredential(userID, accessID, accessKey) {
         }
     }); //find record
 }
-
-function getUser(userId) {
-    Parse.Cloud.useMasterKey();
-    var userQuery = new Parse.Query(Parse.User);
-    userQuery.equalTo("objectId", userId);
-
-    return userQuery.first({
-        success: function(userRetrieved) {
-            return userRetrieved;
-        },
-        error: function(error) {
-            return error;
-        }
-    });
-};
-
 
 Parse.Cloud.define("GoogleWatch", function(request, response) {
     var privateKeyID = request.params.privatekeyid;
