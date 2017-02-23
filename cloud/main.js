@@ -218,7 +218,7 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
             logger.info("User Found");
             if (containsCredential(user.objectId, accessID, accessKey) == false) {
                 var credentialData = new Parse.Object.extend("AWSCredentialStorageTable");
-                credentialData.set("userID", user.objectId);
+                credentialData.set("userid", user.objectId);
                 credentialData.set("data", JSON.stringify(storeObj));
                 credentialData.save();
                 response.success("Store Succeed");
