@@ -216,7 +216,7 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
     getUser(userID).then(function(user) {
             logger.info("User Found");
-            containsCredential(function(isContain) {
+            containsCredential(userID, accessID, accessKey, function(isContain) {
                 if (isContain == false) {
                     var credentialData = new Parse.Object.extend("AWSCredentialStorageTable");
                     credentialData.set("userid", userID);
