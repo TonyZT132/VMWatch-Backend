@@ -1,5 +1,5 @@
 var logger = require('winston');
-var encryption = require('../encryption/encryption');
+var encryption = require('../../encryption/encryption');
 
 module.exports = {
     generateSecureStorageObject: function(accessID, accessKey) {
