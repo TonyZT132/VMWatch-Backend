@@ -265,6 +265,7 @@ function containsCredential(userID, accessID, accessKey) {
             return false;
         },
         error: function(error) {
+            logger.error("Failed to execute query");
             return true;
         }
     }); //find record
