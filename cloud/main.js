@@ -257,6 +257,8 @@ function containsCredential(userID, accessID, accessKey) {
     queryCredential.find({
         success: function(results) {
             for (var record in results) {
+                logger.warn("User id is: " + userID);
+                logger.warn(record);
                 var obj = AWSStore.decryptDataObject(record.get("data"));
                 if (obj.ai == accessID && obj.ak == accessKey) {
                     return true;
