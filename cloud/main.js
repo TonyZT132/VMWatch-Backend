@@ -1,9 +1,12 @@
 var winston = require('winston');
-// Include the Twilio Cloud Module
 var twilioSMS = require('./twilio/twilioSMS');
-var ec2Watch = require('./vmprovider/aws/aws');
-var googleWatch = require('./vmprovider/google/google')
 var encryption = require('./encryption/encryption');
+
+var AWSMonitor = require('./vmprovider/aws/aws_monitor');
+var AWSVerfication = require('./vmprovider/aws/aws_verification');
+var AWSStore = require('./vmprovider/aws/aws_store');
+
+var googleWatch = require('./vmprovider/google/google');
 
 /*Request SMS Validation Code*/
 Parse.Cloud.define("sendCode", function(request, response) {
@@ -176,7 +179,7 @@ Parse.Cloud.define("serviceRequest", function(request, response) {
 Parse.Cloud.define("ec2UserVerification", function(request, response) {
     var accessID = request.params.accessid;
     var accessKey = request.params.accesskey;
-    ec2Watch.ec2UserVerification(accessID, accessKey, function(error, info) {
+    AWSVerfication.ec2UserVerification(accessID, accessKey, function(error, info) {
         if (error) {
             response.error(error);
         } else {
@@ -195,7 +198,7 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
     var range = request.params.range;
 
     winston.info("Start EC2 Watch");
-    ec2Watch.getMonitoringData(accessID, accessKey, instanceID, region, metrics, range, function(error, data) {
+    AWSMonitor.getMonitoringData(accessID, accessKey, instanceID, region, metrics, range, function(error, data) {
         if (error) {
             response.error(error);
         } else {
@@ -206,12 +209,42 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
 
 /*Store the access data for ec2*/
 Parse.Cloud.define("ec2UserDataStore", function(request, response) {
-    winston.info("Start Test");
-    var t = encryption.encrypt("testvmwatch");
-    winston.info("Encryption: " + t);
-    winston.info("Text: " + encryption.decrypt(t));
-    response.success("test done");
+    // winston.info("Start Test");
+    // var t = encryption.encrypt("testvmwatch");
+    // winston.info("Encryption: " + t);
+    // winston.info("Text: " + encryption.decrypt(t));
+    // response.success("test done");
+    var accessID = request.params.accessid;
+    var accessKey = request.params.accesskey;
+    var userID = request.params.userid;
+
+    var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
+    getUser(userID).then(function(user){
+            response.success("User found");
+        }
+        ,
+        function(error){
+            response.error("User not found");
+        }
+    );
 });
+
+function getUser(userId){
+    Parse.Cloud.useMasterKey();
+    var userQuery = new Parse.Query(Parse.User);
+    userQuery.equalTo("objectId", userId);
+
+    return userQuery.first({
+        success: function(userRetrieved)
+        {
+            return userRetrieved;
+        },
+        error: function(error)
+        {
+            return error;
+        }
+    });
+};
 
 
 Parse.Cloud.define("GoogleWatch", function(request, response) {

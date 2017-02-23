@@ -1,31 +1,8 @@
-var winston = require('winston');
+var logger = require('winston');
 
 module.exports = {
-    ec2UserVerification: function(accessID, accessKey, callback) {
-        var AWS = require('aws-sdk');
-        AWS.config.update({
-            accessKeyId: accessID,
-            secretAccessKey: accessKey,
-        });
-
-        var iam = new AWS.IAM();
-        iam.getAccountSummary(function(err, data) {
-            if (err) {
-                if(String(err.code) == "InvalidClientTokenId" || String(err.code) == "SignatureDoesNotMatch") {
-                    winston.error(err.message);
-                    callback("Invalid access credential", null);
-                }else{
-                    callback(null, "Valid access credential");
-                }
-            }
-            else {
-                winston.info("Valid Access ID");
-                callback(null, "Valid access credential");
-            }
-        });
-    },
     getMonitoringData: function(accessID, accessKey, instanceID, instanceRegion, metrics, range, callback) {
-        winston.info('Getting metrics from AWS EC2');
+        logger.info('Getting metrics from AWS EC2');
         var startDate = getStartTime(new Date(), range);
         try {
             var AWS = require('aws-sdk');
@@ -44,17 +21,17 @@ module.exports = {
 
                 if (cloudWatchErr) {
                     error = cloudWatchErr
-                    winston.error("Error: " + cloudWatchErr);
+                    logger.error("Error: " + cloudWatchErr);
                     callback(error, data);
                 } else {
-                    winston.info("Sucessfully get data from CloudWatch");
+                    logger.info("Sucessfully get data from CloudWatch");
                     data = response;
-                    winston.info("Returning data");
+                    logger.info("Returning data");
                     callback(error, data);
                 }
             });
         } catch (err) {
-            winston.info("Error catched from AWS SDK");
+            logger.info("Error catched from AWS SDK");
             callback(err.message, null);
         }
     }
