@@ -216,15 +216,17 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
     getUser(userID).then(function(user) {
             logger.info("User Found");
-            if (containsCredential(userID, accessID, accessKey) == false) {
-                var credentialData = new Parse.Object.extend("AWSCredentialStorageTable");
-                credentialData.set("userid", userID);
-                credentialData.set("data", JSON.stringify(storeObj));
-                credentialData.save();
-                response.success("Store Succeed");
-            } else {
-                response.error("Credentail already stored in the data base");
-            }
+            containsCredential(function(isContain) {
+                if (isContain == false) {
+                    var credentialData = new Parse.Object.extend("AWSCredentialStorageTable");
+                    credentialData.set("userid", userID);
+                    credentialData.set("data", JSON.stringify(storeObj));
+                    credentialData.save();
+                    response.success("Store Succeed");
+                } else {
+                    response.error("Credentail already stored in the data base");
+                }
+            });
         },
         function(error) {
             response.error("User not found");
@@ -248,7 +250,7 @@ function getUser(userId) {
 };
 
 
-function containsCredential(userID, accessID, accessKey) {
+function containsCredential(userID, accessID, accessKey, callback) {
     var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
     var queryCredential = new Parse.Query(credentialStorageTable);
     logger.warn("User id is: " + userID);
@@ -265,14 +267,14 @@ function containsCredential(userID, accessID, accessKey) {
                 logger.warn(obj.ak);
                 logger.warn("--------------");
                 if (obj.ai == accessID && obj.ak == accessKey) {
-                    return true;
+                    callback(true);
                 }
             }
-            return false;
+            callback(false);
         },
         error: function(error) {
             logger.error("Failed to execute query");
-            return true;
+            callback(true);
         }
     }); //find record
 }
