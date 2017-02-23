@@ -251,13 +251,12 @@ function getUser(userId) {
 function containsCredential(userID, accessID, accessKey) {
     var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
     var queryCredential = new Parse.Query(credentialStorageTable);
-
+    logger.warn("User id is: " + userID);
     /*Check whether the record is existed*/
     queryCredential.equalTo("userID", userID);
     queryCredential.find({
         success: function(results) {
             for (var record in results) {
-                logger.warn("User id is: " + userID);
                 logger.warn(record);
                 var obj = AWSStore.decryptDataObject(record.get("data"));
                 if (obj.ai == accessID && obj.ak == accessKey) {
