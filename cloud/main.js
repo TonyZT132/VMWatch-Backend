@@ -1,4 +1,4 @@
-var winston = require('winston');
+var logger = require('winston');
 var twilioSMS = require('./twilio/twilioSMS');
 var encryption = require('./encryption/encryption');
 
@@ -11,7 +11,7 @@ var googleWatch = require('./vmprovider/google/google');
 /*Request SMS Validation Code*/
 Parse.Cloud.define("sendCode", function(request, response) {
 
-    winston.info("Cloud function sendCode is called");
+    logger.info("Cloud function sendCode is called");
     var area = request.params.number.substring(0, 3);
     /*If Number is outside Toronto, return error*/
     if (area != 647 && area != 416 && area != 437) {
@@ -85,14 +85,14 @@ Parse.Cloud.define("sendCode", function(request, response) {
                     },
                     error: function(error) {
                         /*Unable to finish the query*/
-                        winston.error("Failed to query from Validation table");
+                        logger.error("Failed to query from Validation table");
                         response.error("Failed to get validation code. Reason: failed to query in database");
                     }
                 }); //find record
             }
         },
         error: function(error) {
-            winston.error("Failed to query from User table");
+            logger.error("Failed to query from User table");
             response.error("Failed to get validation code. Reason: failed user check" + error);
         }
     }); //find user
@@ -197,7 +197,7 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
     var metrics = request.params.metrics;
     var range = request.params.range;
 
-    winston.info("Start EC2 Watch");
+    logger.info("Start EC2 Watch");
     AWSMonitor.getMonitoringData(accessID, accessKey, instanceID, region, metrics, range, function(error, data) {
         if (error) {
             response.error(error);
@@ -209,10 +209,10 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
 
 /*Store the access data for ec2*/
 Parse.Cloud.define("ec2UserDataStore", function(request, response) {
-    // winston.info("Start Test");
+    // logger.info("Start Test");
     // var t = encryption.encrypt("testvmwatch");
-    // winston.info("Encryption: " + t);
-    // winston.info("Text: " + encryption.decrypt(t));
+    // logger.info("Encryption: " + t);
+    // logger.info("Text: " + encryption.decrypt(t));
     // response.success("test done");
     var accessID = request.params.accessid;
     var accessKey = request.params.accesskey;
