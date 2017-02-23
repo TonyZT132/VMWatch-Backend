@@ -214,32 +214,45 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     var userID = request.params.userid;
 
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
-    getUser(userID).then(function(user){
-            response.success("User found");
-            var AWSCredentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
-            var credentialData = new AWSCredentialStorageTable();
+    getUser(userID).then(function(user) {
+            var credentialData = new Parse.Object.extend("AWSCredentialStorageTable");
             credentialData.set("userID", user.objectId);
             credentialData.set("data", storeObj);
             credentialData.save();
             response.success("Store Succeed");
-        }
-        ,
-        function(error){
+        },
+        function(error) {
             response.error("User not found");
         }
     );
 });
 
-function getUser(userId){
+function checkStorage(userID) {
+    var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
+    var queryCredential = new Parse.Query(credentialStorageTable);
+
+    /*Check whether the record is existed*/
+    queryCredential.equalTo("userID", userID);
+    queryCredential.find({
+        success: function(queryValidationResults) {
+            return true;
+        },
+        error: function(error) {
+            return false;
+        }
+    }); //find record
+}
+
+function getUser(userId) {
     Parse.Cloud.useMasterKey();
     var userQuery = new Parse.Query(Parse.User);
     userQuery.equalTo("objectId", userId);
 
     return userQuery.first({
-        success: function(userRetrieved){
+        success: function(userRetrieved) {
             return userRetrieved;
         },
-        error: function(error){
+        error: function(error) {
             return error;
         }
     });
