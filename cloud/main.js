@@ -209,11 +209,6 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
 
 /*Store the access data for ec2*/
 Parse.Cloud.define("ec2UserDataStore", function(request, response) {
-    // logger.info("Start Test");
-    // var t = encryption.encrypt("testvmwatch");
-    // logger.info("Encryption: " + t);
-    // logger.info("Text: " + encryption.decrypt(t));
-    // response.success("test done");
     var accessID = request.params.accessid;
     var accessKey = request.params.accesskey;
     var userID = request.params.userid;
@@ -221,6 +216,12 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
     getUser(userID).then(function(user){
             response.success("User found");
+            var AWSCredentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
+            var credentialData = new AWSCredentialStorageTable();
+            credentialData.set("userID", user.objectId);
+            credentialData.set("data", storeObj);
+            credentialData.save();
+            response.success("Store Succeed");
         }
         ,
         function(error){
@@ -235,12 +236,10 @@ function getUser(userId){
     userQuery.equalTo("objectId", userId);
 
     return userQuery.first({
-        success: function(userRetrieved)
-        {
+        success: function(userRetrieved){
             return userRetrieved;
         },
-        error: function(error)
-        {
+        error: function(error){
             return error;
         }
     });
