@@ -274,6 +274,7 @@ function containsCredential(userID, accessID, accessKey, callback) {
                     callback(true);
                 }
             }
+            logger.warn("Record not found");
             callback(false);
         },
         error: function(error) {
