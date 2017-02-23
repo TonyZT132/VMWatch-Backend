@@ -259,7 +259,7 @@ function containsCredential(userID, accessID, accessKey, callback) {
     var queryCredential = new Parse.Query(credentialStorageTable);
     logger.warn("User id is: " + userID);
     /*Check whether the record is existed*/
-    queryCredential.equalTo("userID", userID);
+    queryCredential.equalTo("userid", userID);
     queryCredential.find({
         success: function(results) {
             for (var record in results) {
