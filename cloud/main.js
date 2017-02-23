@@ -262,7 +262,8 @@ function containsCredential(userID, accessID, accessKey, callback) {
     queryCredential.equalTo("userid", userID);
     queryCredential.find({
         success: function(results) {
-            for (var record in results) {
+            for (var i = 0; i < results.length; i++) {
+                var record = records[i];
                 logger.warn("6666666666");
                 logger.warn(record.get("data"));
                 var obj = AWSStore.decryptDataObject(record.get("data"));
