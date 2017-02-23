@@ -1,6 +1,5 @@
 var logger = require('winston');
 var twilioSMS = require('./twilio/twilioSMS');
-var encryption = require('./encryption/encryption');
 
 var AWSMonitor = require('./vmprovider/aws/aws_monitor');
 var AWSVerfication = require('./vmprovider/aws/aws_verification');
@@ -215,11 +214,15 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
 
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
     getUser(userID).then(function(user) {
-            var credentialData = new Parse.Object.extend("AWSCredentialStorageTable");
-            credentialData.set("userID", user.objectId);
-            credentialData.set("data", storeObj);
-            credentialData.save();
-            response.success("Store Succeed");
+            if (containsCredential(user.objectId, accessID, accessKey) == false) {
+                var credentialData = new Parse.Object.extend("AWSCredentialStorageTable");
+                credentialData.set("userID", user.objectId);
+                credentialData.set("data", JSON.stringify(storeObj));
+                credentialData.save();
+                response.success("Store Succeed");
+            } else {
+                response.error("Credentail already stored in the data base");
+            }
         },
         function(error) {
             response.error("User not found");
@@ -227,18 +230,24 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     );
 });
 
-function checkStorage(userID) {
+function containsCredential(userID, accessID, accessKey) {
     var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
     var queryCredential = new Parse.Query(credentialStorageTable);
 
     /*Check whether the record is existed*/
     queryCredential.equalTo("userID", userID);
     queryCredential.find({
-        success: function(queryValidationResults) {
-            return true;
+        success: function(results) {
+            for (var record in results) {
+                var obj = AWSStore.decryptDataObject(record.get("data"));
+                if (obj.ai == accessID && obj.ak == accessKey) {
+                    return true;
+                }
+            }
+            return false;
         },
         error: function(error) {
-            return false;
+            return true;
         }
     }); //find record
 }
