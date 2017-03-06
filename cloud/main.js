@@ -237,7 +237,7 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
                 }
             }
             logger.warn("Record not found");
-            callback(false);
+            response.success("Account not found");
         },
         error: function(error) {
             logger.error("Failed to execute query");
@@ -298,66 +298,66 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     // );
 });
 
-function getUser(userId) {
-    Parse.Cloud.useMasterKey();
-    var userQuery = new Parse.Query(Parse.User);
-    userQuery.equalTo("objectId", userId);
+// function getUser(userId) {
+//     Parse.Cloud.useMasterKey();
+//     var userQuery = new Parse.Query(Parse.User);
+//     userQuery.equalTo("objectId", userId);
+//
+//     userQuery.find({
+//         success: function(queryUserResults) {
+//
+//         },
+//         error: function(error) {
+//             /*Fetching failed*/
+//             response.error("Validation Failed, please try again later");
+//         }
+//     });
+//
+//
+//
+//
+//     // return userQuery.first({
+//     //     success: function(userRetrieved) {
+//     //         return userRetrieved;
+//     //     },
+//     //     error: function(error) {
+//     //         return error;
+//     //     }
+//     // });
+// };
 
-    userQuery.find({
-        success: function(queryUserResults) {
 
-        },
-        error: function(error) {
-            /*Fetching failed*/
-            response.error("Validation Failed, please try again later");
-        }
-    });
-
-
-
-
-    // return userQuery.first({
-    //     success: function(userRetrieved) {
-    //         return userRetrieved;
-    //     },
-    //     error: function(error) {
-    //         return error;
-    //     }
-    // });
-};
-
-
-function containsCredential(userID, accessID, accessKey, callback) {
-    var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
-    var queryCredential = new Parse.Query(credentialStorageTable);
-    logger.warn("User id is: " + userID);
-    /*Check whether the record is existed*/
-    queryCredential.equalTo("userid", userID);
-    queryCredential.find({
-        success: function(results) {
-            for (var i = 0; i < results.length; i++) {
-                var record = records[i];
-                logger.warn("6666666666");
-                logger.warn(record.get("data"));
-                var obj = AWSStore.decryptDataObject(record.get("data"));
-                logger.warn("--------------");
-                logger.warn(obj);
-                logger.warn(obj.ai);
-                logger.warn(obj.ak);
-                logger.warn("--------------");
-                if (obj.ai == accessID && obj.ak == accessKey) {
-                    callback(true);
-                }
-            }
-            logger.warn("Record not found");
-            callback(false);
-        },
-        error: function(error) {
-            logger.error("Failed to execute query");
-            callback(true);
-        }
-    }); //find record
-}
+// function containsCredential(userID, accessID, accessKey, callback) {
+//     var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
+//     var queryCredential = new Parse.Query(credentialStorageTable);
+//     logger.warn("User id is: " + userID);
+//     /*Check whether the record is existed*/
+//     queryCredential.equalTo("userid", userID);
+//     queryCredential.find({
+//         success: function(results) {
+//             for (var i = 0; i < results.length; i++) {
+//                 var record = records[i];
+//                 logger.warn("6666666666");
+//                 logger.warn(record.get("data"));
+//                 var obj = AWSStore.decryptDataObject(record.get("data"));
+//                 logger.warn("--------------");
+//                 logger.warn(obj);
+//                 logger.warn(obj.ai);
+//                 logger.warn(obj.ak);
+//                 logger.warn("--------------");
+//                 if (obj.ai == accessID && obj.ak == accessKey) {
+//                     callback(true);
+//                 }
+//             }
+//             logger.warn("Record not found");
+//             callback(false);
+//         },
+//         error: function(error) {
+//             logger.error("Failed to execute query");
+//             callback(true);
+//         }
+//     }); //find record
+// }
 
 Parse.Cloud.define("GoogleWatch", function(request, response) {
     var privateKeyID = request.params.privatekeyid;
