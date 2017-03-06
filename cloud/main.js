@@ -214,28 +214,48 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
 
     logger.info("Generating encrypted data obj");
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
-    getUser(userID).then(function(user) {
-            logger.info("User Found");
-            containsCredential(userID, accessID, accessKey, function(isContain) {
-                logger.info("*******");
-                logger.info(isContain);
-                logger.info("*******");
-                if (isContain == false) {
-                    var table = Parse.Object.extend("AWSCredentialStorageTable");
-                    var credentialData = new table();
-                    credentialData.set("userid", userID);
-                    credentialData.set("data", JSON.stringify(storeObj));
-                    credentialData.save();
-                    response.success("Store Succeed");
-                } else {
-                    response.error("Credentail already stored in the data base");
-                }
-            });
+
+    Parse.Cloud.useMasterKey();
+    var userQuery = new Parse.Query(Parse.User);
+    userQuery.equalTo("objectId", userID);
+
+    userQuery.find({
+        success: function(queryUserResults) {
+            logger.info("FOUND USER!!!!");
+            if (queryUserResults.length > 0) {
+                logger.info(queryUserResults[0].get("nickname"));
+            }
+            response.success("User found");
         },
-        function(error) {
-            response.error("User not found");
+        error: function(error) {
+            /*Fetching failed*/
+            response.error("Validation Failed, please try again later");
         }
-    );
+    });
+
+
+    // getUser(userID).then(function(user) {
+    //         logger.info("User Found");
+    //         containsCredential(userID, accessID, accessKey, function(isContain) {
+    //             logger.info("*******");
+    //             logger.info(isContain);
+    //             logger.info("*******");
+    //             if (isContain == false) {
+    //                 var table = Parse.Object.extend("AWSCredentialStorageTable");
+    //                 var credentialData = new table();
+    //                 credentialData.set("userid", userID);
+    //                 credentialData.set("data", JSON.stringify(storeObj));
+    //                 credentialData.save();
+    //                 response.success("Store Succeed");
+    //             } else {
+    //                 response.error("Credentail already stored in the data base");
+    //             }
+    //         });
+    //     },
+    //     function(error) {
+    //         response.error("User not found");
+    //     }
+    // );
 });
 
 function getUser(userId) {
@@ -243,14 +263,27 @@ function getUser(userId) {
     var userQuery = new Parse.Query(Parse.User);
     userQuery.equalTo("objectId", userId);
 
-    return userQuery.first({
-        success: function(userRetrieved) {
-            return userRetrieved;
+    userQuery.find({
+        success: function(queryUserResults) {
+
         },
         error: function(error) {
-            return error;
+            /*Fetching failed*/
+            response.error("Validation Failed, please try again later");
         }
     });
+
+
+
+
+    // return userQuery.first({
+    //     success: function(userRetrieved) {
+    //         return userRetrieved;
+    //     },
+    //     error: function(error) {
+    //         return error;
+    //     }
+    // });
 };
 
 
