@@ -236,7 +236,6 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
                             var obj = AWSStore.decryptDataObject(record.get("data"));
                             if (obj.ai == accessID && obj.ak == accessKey) {
                                 isContain = true;
-                                response.error("Account already existed, please check your profile.");
                             }
                         }
                         if (isContain == false) {
@@ -245,6 +244,8 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
                             credentialData.set("data", JSON.stringify(storeObj));
                             credentialData.save();
                             response.success("Credetial Store Succeed");
+                        } else {
+                            response.error("Account already existed, please check your profile.");
                         }
                     },
                     error: function(error) {
