@@ -230,19 +230,22 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
                 queryCredential.equalTo("userid", userID);
                 queryCredential.find({
                     success: function(queryCredentialResults) {
+                        var isContain = false;
                         for (var i = 0; i < queryCredentialResults.length; i++) {
                             var record = queryCredentialResults[i];
                             var obj = AWSStore.decryptDataObject(record.get("data"));
                             if (obj.ai == accessID && obj.ak == accessKey) {
+                                isContain = true;
                                 response.error("Account already existed, please check your profile.");
                             }
                         }
-
-                        var credentialData = new credentialStorageTable();
-                        credentialData.set("userid", userID);
-                        credentialData.set("data", JSON.stringify(storeObj));
-                        credentialData.save();
-                        response.success("Credetial Store Succeed");
+                        if (isContain == false) {
+                            var credentialData = new credentialStorageTable();
+                            credentialData.set("userid", userID);
+                            credentialData.set("data", JSON.stringify(storeObj));
+                            credentialData.save();
+                            response.success("Credetial Store Succeed");
+                        }
                     },
                     error: function(error) {
                         logger.error("Failed to execute query");
