@@ -215,17 +215,14 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     logger.info("Generating encrypted data obj");
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
 
-
-
-
     var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
     var queryCredential = new Parse.Query(credentialStorageTable);
 
-    /*Check whether the record is existed*/
     queryCredential.equalTo("userid", userID);
     queryCredential.find({
-        success: function(results) {
-            for (var i = 0; i < results.length; i++) {
+        success: function(queryCredentialResults) {
+            logger.warn("FOUND RECORD!!!!!");
+            for (var i = 0; i < queryCredentialResults.length; i++) {
                 var record = records[i];
                 logger.warn("6666666666");
                 logger.warn(record.get("data"));
@@ -236,7 +233,7 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
                 logger.warn(obj.ak);
                 logger.warn("--------------");
                 if (obj.ai == accessID && obj.ak == accessKey) {
-                    response.error("Account Exist");
+                    response.error("Account Existed");
                 }
             }
             logger.warn("Record not found");
