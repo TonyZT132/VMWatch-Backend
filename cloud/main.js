@@ -224,7 +224,7 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
             if (queryUserResults.length > 0) {
                 var user = queryUserResults[0];
                 logger.info("User found with nickname: " + user.get("nickname"));
-                var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
+                var credentialStorageTable = Parse.Object.extend("CredentialStorageTable");
                 var queryCredential = new Parse.Query(credentialStorageTable);
 
                 queryCredential.equalTo("userid", userID);
