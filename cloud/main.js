@@ -229,8 +229,8 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
                 var obj = AWSStore.decryptDataObject(record.get("data"));
                 logger.warn("--------------");
                 logger.warn(obj);
-                logger.warn(obj.ai);
-                logger.warn(obj.ak);
+                logger.warn(obj["ai"]);
+                logger.warn(obj["ak"]);
                 logger.warn("--------------");
                 if (obj.ai == accessID && obj.ak == accessKey) {
                     response.error("Account Existed");
@@ -244,9 +244,6 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
             response.error("Validation Failed, please try again later");
         }
     }); //find record
-
-
-
 
 
 

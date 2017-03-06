@@ -17,9 +17,9 @@ module.exports = {
     },
     decryptDataObject: function(data) {
         var credential = JSON.parse(obj);
-        var dataKey = encryption.decrypt(credential.dk, process.env.DB_ENCRYPTION_MASTER_KEY);
-        var accessID = encryption.decrypt(credential.ai, dataKey);
-        var accessKey = encryption.decrypt(credential.ak, dataKey);
+        var dataKey = encryption.decrypt(credential["dk"], process.env.DB_ENCRYPTION_MASTER_KEY);
+        var accessID = encryption.decrypt(credential["ai"], dataKey);
+        var accessKey = encryption.decrypt(credential["ak"], dataKey);
 
         return {
             "dk": dataKey,
