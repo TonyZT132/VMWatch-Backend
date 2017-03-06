@@ -222,12 +222,12 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     userQuery.find({
         success: function(queryUserResults) {
             if (queryUserResults.length > 0) {
-                var user = queryUserResults[0]
-                logger.info("User found with user id: " + user.get("objectId"));
+                var user = queryUserResults[0];
+                logger.info("User found with user id: " + user.objectId);
                 var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
                 var queryCredential = new Parse.Query(credentialStorageTable);
 
-                queryCredential.equalTo("userid", user.get("objectId"));
+                queryCredential.equalTo("userid", user.objectId);
                 queryCredential.find({
                     success: function(queryCredentialResults) {
                         for (var i = 0; i < queryCredentialResults.length; i++) {
