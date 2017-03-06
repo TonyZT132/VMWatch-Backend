@@ -223,11 +223,11 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
         success: function(queryUserResults) {
             if (queryUserResults.length > 0) {
                 var user = queryUserResults[0];
-                logger.info("User found with user id: " + user.objectId);
+                logger.info("User found with nickname: " + user.get("nickname"));
                 var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
                 var queryCredential = new Parse.Query(credentialStorageTable);
 
-                queryCredential.equalTo("userid", user.objectId);
+                queryCredential.equalTo("userid", userID);
                 queryCredential.find({
                     success: function(queryCredentialResults) {
                         for (var i = 0; i < queryCredentialResults.length; i++) {
@@ -256,7 +256,6 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
             response.error("Validation Failed, please try again later");
         }
     });
-
 });
 
 Parse.Cloud.define("GoogleWatch", function(request, response) {
