@@ -16,7 +16,8 @@ module.exports = {
         };
     },
     decryptDataObject: function(data) {
-        var credential = JSON.parse(obj);
+        // var credential = JSON.parse(obj);
+        var credential = JSON.parse(data);
         logger.info("Processing Decryption");
         var dataKey = encryption.decrypt(credential["dk"], process.env.DB_ENCRYPTION_MASTER_KEY);
         var accessID = encryption.decrypt(credential["ai"], dataKey);
