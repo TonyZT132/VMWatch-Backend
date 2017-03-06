@@ -223,7 +223,7 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
         success: function(queryCredentialResults) {
             logger.warn("FOUND RECORD!!!!!");
             for (var i = 0; i < queryCredentialResults.length; i++) {
-                var record = records[i];
+                var record = queryCredentialResults[i];
                 logger.warn("6666666666");
                 logger.warn(record.get("data"));
                 var obj = AWSStore.decryptDataObject(record.get("data"));
