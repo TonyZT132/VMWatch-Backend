@@ -215,146 +215,49 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     logger.info("Generating encrypted data obj");
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
 
-    var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
-    var queryCredential = new Parse.Query(credentialStorageTable);
+    Parse.Cloud.useMasterKey();
+    var userQuery = new Parse.Query(Parse.User);
+    userQuery.equalTo("objectId", userID);
 
-    queryCredential.equalTo("userid", userID);
-    queryCredential.find({
-        success: function(queryCredentialResults) {
-            logger.warn("FOUND RECORD!!!!!");
-            for (var i = 0; i < queryCredentialResults.length; i++) {
-                var record = queryCredentialResults[i];
-                logger.warn("6666666666");
-                logger.warn(record.get("data"));
-                var obj = AWSStore.decryptDataObject(record.get("data"));
-                logger.warn("--------------");
-                logger.warn(obj);
-                logger.warn(obj["ai"]);
-                logger.warn(obj["ak"]);
-                logger.warn("--------------");
-                if (obj.ai == accessID && obj.ak == accessKey) {
-                    response.error("Account Existed");
-                }
+    userQuery.find({
+        success: function(queryUserResults) {
+            if (queryUserResults.length > 0) {
+                var user = queryUserResults[0]
+                logger.info("User found with user id: " + user.get("objectId"));
+                var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
+                var queryCredential = new Parse.Query(credentialStorageTable);
+
+                queryCredential.equalTo("userid", user.get("objectId"));
+                queryCredential.find({
+                    success: function(queryCredentialResults) {
+                        for (var i = 0; i < queryCredentialResults.length; i++) {
+                            var record = queryCredentialResults[i];
+                            var obj = AWSStore.decryptDataObject(record.get("data"));
+                            if (obj.ai == accessID && obj.ak == accessKey) {
+                                response.error("Account already existed, please check your profile.");
+                            }
+                        }
+
+                        var credentialData = new credentialStorageTable();
+                        credentialData.set("userid", userID);
+                        credentialData.set("data", JSON.stringify(storeObj));
+                        credentialData.save();
+                        response.success("Credetial Store Succeed");
+                    },
+                    error: function(error) {
+                        logger.error("Failed to execute query");
+                        response.error("Validation Failed, please try again later");
+                    }
+                }); //find record
             }
-            logger.warn("Record not found");
-            response.success("Account not found");
         },
         error: function(error) {
-            logger.error("Failed to execute query");
+            /*Fetching failed*/
             response.error("Validation Failed, please try again later");
         }
-    }); //find record
+    });
 
-
-
-
-
-
-
-
-    // Parse.Cloud.useMasterKey();
-    // var userQuery = new Parse.Query(Parse.User);
-    // userQuery.equalTo("objectId", userID);
-    //
-    // userQuery.find({
-    //     success: function(queryUserResults) {
-    //         logger.info("FOUND USER!!!!");
-    //         if (queryUserResults.length > 0) {
-    //             logger.info(queryUserResults[0].get("nickname"));
-    //         }
-    //         response.success("User found");
-    //     },
-    //     error: function(error) {
-    //         /*Fetching failed*/
-    //         response.error("Validation Failed, please try again later");
-    //     }
-    // });
-
-
-    // getUser(userID).then(function(user) {
-    //         logger.info("User Found");
-    //         containsCredential(userID, accessID, accessKey, function(isContain) {
-    //             logger.info("*******");
-    //             logger.info(isContain);
-    //             logger.info("*******");
-    //             if (isContain == false) {
-    //                 var table = Parse.Object.extend("AWSCredentialStorageTable");
-    //                 var credentialData = new table();
-    //                 credentialData.set("userid", userID);
-    //                 credentialData.set("data", JSON.stringify(storeObj));
-    //                 credentialData.save();
-    //                 response.success("Store Succeed");
-    //             } else {
-    //                 response.error("Credentail already stored in the data base");
-    //             }
-    //         });
-    //     },
-    //     function(error) {
-    //         response.error("User not found");
-    //     }
-    // );
 });
-
-// function getUser(userId) {
-//     Parse.Cloud.useMasterKey();
-//     var userQuery = new Parse.Query(Parse.User);
-//     userQuery.equalTo("objectId", userId);
-//
-//     userQuery.find({
-//         success: function(queryUserResults) {
-//
-//         },
-//         error: function(error) {
-//             /*Fetching failed*/
-//             response.error("Validation Failed, please try again later");
-//         }
-//     });
-//
-//
-//
-//
-//     // return userQuery.first({
-//     //     success: function(userRetrieved) {
-//     //         return userRetrieved;
-//     //     },
-//     //     error: function(error) {
-//     //         return error;
-//     //     }
-//     // });
-// };
-
-
-// function containsCredential(userID, accessID, accessKey, callback) {
-//     var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
-//     var queryCredential = new Parse.Query(credentialStorageTable);
-//     logger.warn("User id is: " + userID);
-//     /*Check whether the record is existed*/
-//     queryCredential.equalTo("userid", userID);
-//     queryCredential.find({
-//         success: function(results) {
-//             for (var i = 0; i < results.length; i++) {
-//                 var record = records[i];
-//                 logger.warn("6666666666");
-//                 logger.warn(record.get("data"));
-//                 var obj = AWSStore.decryptDataObject(record.get("data"));
-//                 logger.warn("--------------");
-//                 logger.warn(obj);
-//                 logger.warn(obj.ai);
-//                 logger.warn(obj.ak);
-//                 logger.warn("--------------");
-//                 if (obj.ai == accessID && obj.ak == accessKey) {
-//                     callback(true);
-//                 }
-//             }
-//             logger.warn("Record not found");
-//             callback(false);
-//         },
-//         error: function(error) {
-//             logger.error("Failed to execute query");
-//             callback(true);
-//         }
-//     }); //find record
-// }
 
 Parse.Cloud.define("GoogleWatch", function(request, response) {
     var privateKeyID = request.params.privatekeyid;
