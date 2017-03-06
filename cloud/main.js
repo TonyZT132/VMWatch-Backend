@@ -215,23 +215,66 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     logger.info("Generating encrypted data obj");
     var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
 
-    Parse.Cloud.useMasterKey();
-    var userQuery = new Parse.Query(Parse.User);
-    userQuery.equalTo("objectId", userID);
 
-    userQuery.find({
-        success: function(queryUserResults) {
-            logger.info("FOUND USER!!!!");
-            if (queryUserResults.length > 0) {
-                logger.info(queryUserResults[0].get("nickname"));
+
+
+    var credentialStorageTable = Parse.Object.extend("AWSCredentialStorageTable");
+    var queryCredential = new Parse.Query(credentialStorageTable);
+
+    /*Check whether the record is existed*/
+    queryCredential.equalTo("userid", userID);
+    queryCredential.find({
+        success: function(results) {
+            for (var i = 0; i < results.length; i++) {
+                var record = records[i];
+                logger.warn("6666666666");
+                logger.warn(record.get("data"));
+                var obj = AWSStore.decryptDataObject(record.get("data"));
+                logger.warn("--------------");
+                logger.warn(obj);
+                logger.warn(obj.ai);
+                logger.warn(obj.ak);
+                logger.warn("--------------");
+                if (obj.ai == accessID && obj.ak == accessKey) {
+                    response.error("Account Exist");
+                }
             }
-            response.success("User found");
+            logger.warn("Record not found");
+            callback(false);
         },
         error: function(error) {
-            /*Fetching failed*/
+            logger.error("Failed to execute query");
             response.error("Validation Failed, please try again later");
         }
-    });
+    }); //find record
+
+
+
+
+
+
+
+
+
+
+
+    // Parse.Cloud.useMasterKey();
+    // var userQuery = new Parse.Query(Parse.User);
+    // userQuery.equalTo("objectId", userID);
+    //
+    // userQuery.find({
+    //     success: function(queryUserResults) {
+    //         logger.info("FOUND USER!!!!");
+    //         if (queryUserResults.length > 0) {
+    //             logger.info(queryUserResults[0].get("nickname"));
+    //         }
+    //         response.success("User found");
+    //     },
+    //     error: function(error) {
+    //         /*Fetching failed*/
+    //         response.error("Validation Failed, please try again later");
+    //     }
+    // });
 
 
     // getUser(userID).then(function(user) {
