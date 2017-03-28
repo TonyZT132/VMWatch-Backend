@@ -58,7 +58,7 @@ var ListResources = {
         monitoring.projects.timeSeries.list({
             auth: authClient,
             filter: 'metric.type="' + METRIC_CPU + '" AND metric.label.instance_name = ' + instanceId,
-            pageSize: 3,
+            pageSize: 5,
             'interval.startTime': startTime,
             'interval.endTime': endTime,
             name: projectId
@@ -84,7 +84,7 @@ var ListResources = {
         monitoring.projects.timeSeries.list({
             auth: authClient,
             filter: 'metric.type="' + METRIC_DISK_READ_COUNT + '" AND metric.label.instance_name = ' + instanceID,
-            pageSize: 3,
+            pageSize: 5,
             'interval.startTime': startTime,
             'interval.endTime': endTime,
             name: projectId
@@ -109,7 +109,7 @@ var ListResources = {
         monitoring.projects.timeSeries.list({
             auth: authClient,
             filter: 'metric.type="' + METRIC_DISK_WRITE_COUNT + '" AND metric.label.instance_name = ' + instanceID,
-            pageSize: 3,
+            pageSize: 5,
             'interval.startTime': startTime,
             'interval.endTime': endTime,
             name: projectId
@@ -134,7 +134,7 @@ var ListResources = {
         monitoring.projects.timeSeries.list({
             auth: authClient,
             filter: 'metric.type="' + METRIC_NETWORK_RECEIVED + '" AND metric.label.instance_name = ' + instanceID,
-            pageSize: 3,
+            pageSize: 5,
             'interval.startTime': startTime,
             'interval.endTime': endTime,
             name: projectId
@@ -159,7 +159,7 @@ var ListResources = {
         monitoring.projects.timeSeries.list({
             auth: authClient,
             filter: 'metric.type="' + METRIC_NETWORK_SENT + '" AND metric.label.instance_name = ' + instanceID,
-            pageSize: 3,
+            pageSize: 5,
             'interval.startTime': startTime,
             'interval.endTime': endTime,
             name: projectId
