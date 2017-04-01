@@ -210,10 +210,12 @@ Parse.Cloud.define("ec2Watch", function(request, response) {
 Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     var accessID = request.params.accessid;
     var accessKey = request.params.accesskey;
+    var instanceid = request.params.instanceid;
+    var region = request.params.region;
     var userID = request.params.userid;
 
     logger.info("Generating encrypted data obj");
-    var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey);
+    var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey, instanceid, region);
 
     Parse.Cloud.useMasterKey();
     var userQuery = new Parse.Query(Parse.User);
