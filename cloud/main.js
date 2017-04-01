@@ -236,7 +236,7 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
                         for (var i = 0; i < queryCredentialResults.length; i++) {
                             var record = queryCredentialResults[i];
                             var obj = AWSStore.decryptDataObject(record.get("data"));
-                            if (obj.ai == accessID && obj.ak == accessKey) {
+                            if (obj.ai == accessID && obj.ak == accessKey && obj.ii == instanceid && obj.re == region) {
                                 isContain = true;
                             }
                         }
