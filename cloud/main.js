@@ -221,6 +221,7 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     var userQuery = new Parse.Query(Parse.User);
     userQuery.equalTo("objectId", userID);
 
+    logger.info("Start querying user");
     userQuery.find({
         success: function(queryUserResults) {
             if (queryUserResults.length > 0) {
