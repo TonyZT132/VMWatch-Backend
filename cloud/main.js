@@ -265,6 +265,32 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
     });
 });
 
+Parse.Cloud.define("ec2UserDataGet", function(request, response) {
+    var userID = request.params.userid;
+
+    var credentialStorageTable = Parse.Object.extend("CredentialStorageTable");
+    var queryCredential = new Parse.Query(credentialStorageTable);
+
+    queryCredential.equalTo("userid", userID);
+    queryCredential.find({
+        success: function(queryCredentialResults) {
+            logger.info("Data get success");
+            var result = [];
+            for (var i = 0; i < queryCredentialResults.length; i++) {
+                var record = queryCredentialResults[i];
+                var obj = AWSStore.decryptDataObject(record.get("data"));
+                result.push(obj);
+            }
+            response.success(result);
+        },
+        error: function(error) {
+            logger.error("Failed to execute query");
+            response.error("Validation Failed, please try again later");
+        }
+    }); //find record
+
+});
+
 Parse.Cloud.define("GoogleWatch", function(request, response) {
     var privateKeyID = request.params.privatekeyid;
     var privateKey = request.params.privatekey;
