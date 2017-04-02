@@ -31,7 +31,6 @@ module.exports = {
         var region = encryption.decrypt(credential["re"], dataKey);
 
         return {
-            "dk": dataKey,
             "ai": accessID,
             "ak": accessKey,
             "ii": instanceID,
