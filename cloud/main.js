@@ -291,6 +291,65 @@ Parse.Cloud.define("ec2UserDataGet", function(request, response) {
 
 });
 
+/*When user finish signup, delete the validation record*/
+Parse.Cloud.define("deleteEC2CredentialRecord", function(request, response) {
+    var accessID = request.params.accessid;
+    var accessKey = request.params.accesskey;
+    var instanceid = request.params.instanceid;
+    var region = request.params.region;
+    var userID = request.params.userid;
+
+    logger.info("Generating encrypted data obj");
+    var storeObj = AWSStore.generateSecureStorageObject(accessID, accessKey, instanceid, region);
+
+    Parse.Cloud.useMasterKey();
+    var userQuery = new Parse.Query(Parse.User);
+    userQuery.equalTo("objectId", userID);
+
+    logger.info("Start querying user");
+    userQuery.find({
+        success: function(queryUserResults) {
+            if (queryUserResults.length > 0) {
+                var user = queryUserResults[0];
+                logger.info("User found with nickname: " + user.get("nickname"));
+                var credentialStorageTable = Parse.Object.extend("CredentialStorageTable");
+                var queryCredential = new Parse.Query(credentialStorageTable);
+
+                queryCredential.equalTo("userid", userID);
+                queryCredential.find({
+                    success: function(queryCredentialResults) {
+                        var isContain = false;
+                        for (var i = 0; i < queryCredentialResults.length; i++) {
+                            var record = queryCredentialResults[i];
+                            var obj = AWSStore.decryptDataObject(record.get("data"));
+                            if (obj.ai == accessID && obj.ak == accessKey && obj.ii == instanceid && obj.re == region) {
+                                obj.destroy({
+                                    success: function(myObject) {
+                                        /*Successfully delete the object, return true*/
+                                        response.success("Record successfully deleted");
+                                    },
+                                    error: function(myObject, error) {
+                                        /*Delete failed*/
+                                        response.error("Backend issue, please try again later");
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    error: function(error) {
+                        logger.error("Failed to execute query");
+                        response.error("Validation Failed, please try again later");
+                    }
+                }); //find record
+            }
+        },
+        error: function(error) {
+            /*Fetching failed*/
+            response.error("Validation Failed, please try again later");
+        }
+    });
+});
+
 Parse.Cloud.define("GoogleWatch", function(request, response) {
     var privateKeyID = request.params.privatekeyid;
     var privateKey = request.params.privatekey;
