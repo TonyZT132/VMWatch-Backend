@@ -28,7 +28,7 @@ var METRIC_NETWORK_SENT = 'compute.googleapis.com/instance/network/sent_bytes_co
 function getStartTime () {
     var d = new Date();
     d.setHours(d.getHours());
-    d.setMinutes(d.getMinutes() - 5);
+    d.setMinutes(d.getMinutes() - 60);
     return JSON.parse(JSON.stringify(d).replace('Z', '000Z'));
 }
 
