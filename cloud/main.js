@@ -335,6 +335,7 @@ Parse.Cloud.define("deleteEC2CredentialRecord", function(request, response) {
                                 });
                             }
                         }
+                        response.error("Did not find record");
                     },
                     error: function(error) {
                         logger.error("Failed to execute query");
