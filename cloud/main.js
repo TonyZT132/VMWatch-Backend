@@ -322,18 +322,9 @@ Parse.Cloud.define("deleteEC2CredentialRecord", function(request, response) {
                         for (var i = 0; i < queryCredentialResults.length; i++) {
                             var record = queryCredentialResults[i];
                             var obj = AWSStore.decryptDataObject(record.get("data"));
-                            logger.info(obj.ai);
-                            logger.info(accessID);
-                            logger.info(obj.ak);
-                            logger.info(accessKey);
-                            logger.info(obj.ii);
-                            logger.info(instanceid);
-                            logger.info(obj.re);
-                            logger.info(region);
 
                             if (obj.ai == accessID && obj.ak == accessKey && obj.ii == instanceid && obj.re == region) {
-                                logger.info("Found");
-                                obj.destroy({
+                                record.destroy({
                                     success: function(myObject) {
                                         /*Successfully delete the object, return true*/
                                         response.success("Record successfully deleted");
