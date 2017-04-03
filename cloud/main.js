@@ -238,18 +238,24 @@ Parse.Cloud.define("ec2UserDataStore", function(request, response) {
                             var record = queryCredentialResults[i];
                             var obj = AWSStore.decryptDataObject(record.get("data"));
                             if (obj.ai == accessID && obj.ak == accessKey && obj.ii == instanceid && obj.re == region) {
-                                isContain = true;
+                                response.error("Account already existed, please check your profile.");
                             }
                         }
-                        if (isContain == false) {
-                            var credentialData = new credentialStorageTable();
-                            credentialData.set("userid", userID);
-                            credentialData.set("data", JSON.stringify(storeObj));
-                            credentialData.save();
-                            response.success("Credetial Store Succeed");
-                        } else {
-                            response.error("Account already existed, please check your profile.");
-                        }
+
+                        var credentialData = new credentialStorageTable();
+                        credentialData.set("userid", userID);
+                        credentialData.set("data", JSON.stringify(storeObj));
+                        credentialData.save();
+                        response.success("Credetial Store Succeed");
+                        // if (isContain == false) {
+                        //     var credentialData = new credentialStorageTable();
+                        //     credentialData.set("userid", userID);
+                        //     credentialData.set("data", JSON.stringify(storeObj));
+                        //     credentialData.save();
+                        //     response.success("Credetial Store Succeed");
+                        // } else {
+                        //     response.error("Account already existed, please check your profile.");
+                        // }
                     },
                     error: function(error) {
                         logger.error("Failed to execute query");
