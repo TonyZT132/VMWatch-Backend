@@ -332,6 +332,7 @@ Parse.Cloud.define("deleteEC2CredentialRecord", function(request, response) {
                             logger.info(region);
 
                             if (obj.ai == accessID && obj.ak == accessKey && obj.ii == instanceid && obj.re == region) {
+                                logger.info("Found");
                                 obj.destroy({
                                     success: function(myObject) {
                                         /*Successfully delete the object, return true*/
