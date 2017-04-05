@@ -1,2 +1,2 @@
 # VMWatch-Backend
-Server-side for UHelp iOS application
+Server-side for VMWatch iOS application
